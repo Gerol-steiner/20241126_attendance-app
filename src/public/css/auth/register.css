@@ -47,6 +47,7 @@ body {
 .form__input--text input {
     width: 100%;
     box-sizing: border-box;
+    margin-bottom: 3px;
 }
 
 .error-message {
