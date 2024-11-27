@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\AttendanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,9 +16,7 @@ use App\Http\Controllers\Auth\VerificationController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', function () {return view('welcome');})->name('welcome');
 
 // ユーザー登録ルート
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
@@ -29,4 +28,9 @@ Route::get('/register/pending', function () {return view('auth.registration_pend
 // 一時的にログインさせてから、verifyメソッドを呼び出す
 Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'temporaryLoginAndVerify'])
     ->middleware(['signed'])  // 署名付きURLでの確認を行う
-    ->name('verification.verify');
+    ->name('verification.verify'); // 「VerifyEmail.php」でデフォルト定義されいるので変更しないこと
+
+
+
+
+    Route::post('/attendances/check-in', [AttendanceController::class, 'checkIn'])->name('attendances.checkIn');
