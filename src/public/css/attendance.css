@@ -1,0 +1,56 @@
+body {
+    font-weight: 600;
+    margin: 0;
+}
+
+.header {
+    background-color: #000000;
+}
+
+.header_inner {
+    display: flex;
+    height: 70px;
+    /*ヘッダーの高さ*/
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 30px;
+    margin-right: 20px;
+}
+
+.header__logo {
+    display: block;
+    /* インラインからブロック要素に変更 */
+    padding: 15px;
+}
+
+/*ヘッダー右側のnavスペース*/
+.header__nav {
+    width: 470px;
+    height: 100%;
+    font-size: 18px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    text-decoration: none;
+}
+
+.header__link {
+    width: 120px;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.header__logout-button {
+    /*ログアウトbutton*/
+    font-weight: 600;
+    width: 120px;
+    font-size: 18px;
+    border: none;
+    margin-right: 20px;
+    background-color: #000000;
+    color: #ffffff;
+}
+
+/* タブレット（768-850px）向けのスタイル */
+@media screen and (max-width: 850px) {}

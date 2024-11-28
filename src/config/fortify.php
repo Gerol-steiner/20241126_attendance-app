@@ -78,6 +78,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Redirects
+    |--------------------------------------------------------------------------
+    |
+    | Here you may define custom paths for Fortify to redirect users after
+    | specific actions like logout. By default, logout redirects to "/".
+    |
+    */
+
+    'redirects' => [
+        'logout' => '/login', // ログアウト後のリダイレクト先
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Fortify Routes Prefix / Subdomain
     |--------------------------------------------------------------------------
     |

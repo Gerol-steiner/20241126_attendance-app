@@ -19,12 +19,14 @@ class DatabaseSeeder extends Seeder
         Schema::disableForeignKeyConstraints();
 
         // シーディング前に全レコードを削除
+        DB::table('users')->truncate();
         DB::table('attendance_statuses')->truncate();
 
         // 外部キー制約を有効化
         Schema::enableForeignKeyConstraints();
 
         // ダミーデータ作成
+        $this->call(UserSeeder::class);
         $this->call(AttendanceStatusSeeder::class);
     }
 }

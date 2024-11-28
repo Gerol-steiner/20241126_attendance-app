@@ -16,7 +16,7 @@ use App\Http\Controllers\AttendanceController;
 |
 */
 
-Route::get('/', function () {return view('welcome');})->name('welcome');
+Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance');
 
 // ユーザー登録ルート
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
@@ -33,4 +33,4 @@ Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'tempora
 
 
 
-    Route::post('/attendances/check-in', [AttendanceController::class, 'checkIn'])->name('attendances.checkIn');
+    Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.checkIn');

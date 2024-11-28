@@ -24,11 +24,11 @@ class VerificationController extends Controller
             // ■ 既に認証まで済ませたユーザー
             if (Auth::check()) {
                 // ■ ユーザーが既にログインしている場合
-                return redirect()->route('welcome')->with('info', 'メールアドレスは既に認証されています。');
+                return redirect()->route('attendance')->with('info', 'メールアドレスは既に認証されています。');
             } else {
                 // ■ ユーザーがログインしていない場合
                 Auth::login($user);
-                return redirect()->route('welcome')->with('info', 'メールアドレスは既に認証されています。ログインしました。');
+                return redirect()->route('attendance')->with('info', 'メールアドレスは既に認証されています。ログインしました。');
             }
         }
 
@@ -37,7 +37,7 @@ class VerificationController extends Controller
 
         if (hash_equals((string) $user->getKey(), $id) && hash_equals((string) $hash, sha1($user->email))) {
             $user->markEmailAsVerified();
-            return redirect('/')->with('success', 'メールアドレスが認証されました。');
+            return redirect('/attendance')->with('success', 'メールアドレスが認証されました。');
         }
 
         // ■ ハッシュが一致しない不正なケース
