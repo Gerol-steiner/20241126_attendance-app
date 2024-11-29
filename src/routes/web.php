@@ -16,7 +16,7 @@ use App\Http\Controllers\AttendanceController;
 |
 */
 
-Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance');
+
 
 // ユーザー登録ルート
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
@@ -31,6 +31,17 @@ Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'tempora
     ->name('verification.verify'); // 「VerifyEmail.php」でデフォルト定義されいるので変更しないこと
 
 
-
-
-    Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.checkIn');
+// 「勤怠画面」
+Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+// 「勤怠画面」：出勤
+Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.checkIn');
+// 「勤怠画面」：休憩入
+Route::post('/attendance/start-break', [AttendanceController::class, 'startBreak'])->name('attendance.startBreak');
+// 「勤怠画面」：休憩戻
+Route::post('/attendance/end-break', [AttendanceController::class, 'endBreak'])->name('attendance.endBreak');
+// 「勤怠画面」：退勤
+Route::post('/attendance/check-out', [AttendanceController::class, 'checkOut'])->name('attendance.checkOut');
+// 「勤怠一覧画面」
+Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendance.list');
+// 「勤怠詳細画面」
+Route::get('/attendance/{id}', [AttendanceController::class, 'show'])->name('attendance.show');

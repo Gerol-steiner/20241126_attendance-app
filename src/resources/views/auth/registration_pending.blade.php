@@ -12,7 +12,7 @@
 
 <body>
     <header class="header">
-        <a class="header__logo" href="/">
+        <a class="header__logo" href="/attendance">
             <img src="{{ asset('images/logo.svg') }}" alt="COACHTECH ロゴ" class="logo-image">
         </a>
     </header>

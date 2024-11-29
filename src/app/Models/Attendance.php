@@ -33,4 +33,9 @@ class Attendance extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function attendanceStatusChanges()
+    {
+        return $this->hasMany(AttendanceStatusChange::class);
+    }
 }

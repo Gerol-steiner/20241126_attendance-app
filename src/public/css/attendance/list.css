@@ -1,0 +1,159 @@
+body {
+    font-weight: 600;
+    margin: 0;
+}
+
+.header {
+    background-color: #000000;
+}
+
+.header_inner {
+    display: flex;
+    height: 70px;
+    /*ヘッダーの高さ*/
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 30px;
+    margin-right: 20px;
+}
+
+.header__logo {
+    display: block;
+    /* インラインからブロック要素に変更 */
+    padding: 15px;
+}
+
+/*ヘッダー右側のnavスペース*/
+.header__nav {
+    width: 470px;
+    height: 100%;
+    font-size: 18px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    text-decoration: none;
+}
+
+.header__link {
+    width: 120px;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+}
+
+/*ログアウトbutton*/
+.header__logout-button {
+    font-weight: 600;
+    width: 120px;
+    font-size: 18px;
+    border: none;
+    margin-right: 20px;
+    background-color: #000000;
+    color: #ffffff;
+}
+
+/* <main>タグ */
+main {
+    background-color: #E1E1E1;
+}
+
+/* 一番外の div  */
+.attendance-wrapper {
+    width: 65%;
+    margin:0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border:solid 1px red;
+}
+
+/* タイトル 「勤怠一覧」*/
+.attendance-wrapper h1 {
+    text-align: left;
+    width: 100%;
+    border-left: solid 6px #000000;
+    padding-left: 14px;
+}
+
+/*カレンダーナビケーション div*/
+.month-navigation {
+    width: 100%;
+    padding: 20px;
+    background-color: #ffffff;
+    margin-bottom: 30px;
+    border-radius: 10px;
+}
+
+/*カレンダーナビケーション div「年/月」*/
+.month-navigation span {
+    color: #000000;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+/*カレンダーナビケーション div「<-先月、翌月->」*/
+.month-navigation a {
+    color: #737373;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+/*カレンダーナビケーション div「<-先月、翌月->」:ホバー時*/
+.month-navigation a:hover {
+    text-decoration: underline;
+}
+
+/*カレンダーアイコン*/
+.calendar-icon {
+    width: 28x;
+    height: 28px;
+}
+
+/* テーブル全体のスタイリング */
+.attendance-table {
+    width: 100%;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: center;
+    /* 「border-radius」のために以下４行が必要 */
+    border-radius: 16px;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+}
+
+/* テーブルヘッダー */
+.attendance-table thead th {
+    color: #737373;
+    background-color: #ffffff;
+    padding: 14px;
+    border-bottom: 4px solid #E1E1E1;
+}
+
+/* テーブルボディ */
+.attendance-table tbody td {
+    color: #737373;
+    padding: 10px;
+    background-color: #ffffff;
+    border-bottom: 2px solid #E1E1E1;
+}
+
+/* テーブルの「詳細」列に padding-right を設定 */
+.attendance-table td:last-child,
+.attendance-table th:last-child {
+    padding-right: 35px;
+}
+
+/* 詳細リンク */
+.attendance-table tbody td a {
+    color: #000000;
+    text-decoration: none;
+}
+
+/* 詳細リンクのホバー時 */
+.attendance-table tbody td a:hover {
+    text-decoration: underline;
+}
+
+/* タブレット（768-850px）向けのスタイル */
+@media screen and (max-width: 850px) {}
