@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB; // 追加
 
-class AttendanceStatusSeeder extends Seeder
+class StatusSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,7 +14,7 @@ class AttendanceStatusSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('attendance_statuses')->insert([
+        DB::table('statuses')->insert([
             [
                 'name' => '勤務外',
                 'description' => '本日の勤務をまだ開始していない状態',

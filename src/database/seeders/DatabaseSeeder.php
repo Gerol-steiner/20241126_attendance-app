@@ -21,8 +21,9 @@ class DatabaseSeeder extends Seeder
         // シーディング前に全レコードを削除
         DB::table('users')->truncate();
         DB::table('attendances')->truncate();
-        DB::table('attendance_statuses')->truncate();
-        DB::table('attendance_status_changes')->truncate();
+        DB::table('statuses')->truncate();
+        DB::table('status_changes')->truncate();
+        DB::table('break_records')->truncate();
 
         // 外部キー制約を有効化
         Schema::enableForeignKeyConstraints();
@@ -30,6 +31,7 @@ class DatabaseSeeder extends Seeder
         // ダミーデータ作成
         $this->call(UserSeeder::class);
         $this->call(AttendanceSeeder::class);
-        $this->call(AttendanceStatusSeeder::class);
+        $this->call(StatusSeeder::class);
+        $this->call(BreakRecordSeeder::class);
     }
 }

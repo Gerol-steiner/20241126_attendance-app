@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAttendanceStatusesTable extends Migration
+class CreateStatusesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateAttendanceStatusesTable extends Migration
      */
     public function up()
     {
-        Schema::create('attendance_statuses', function (Blueprint $table) {
+        Schema::create('statuses', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->unique(); // ステータス名（例: 出勤中, 休憩中, 退勤済み）
             $table->string('description', 255)->nullable(); // ステータス説明
@@ -28,6 +28,6 @@ class CreateAttendanceStatusesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('attendance_statuses');
+        Schema::dropIfExists('statuses');
     }
 }

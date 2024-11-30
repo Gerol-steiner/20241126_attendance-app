@@ -34,8 +34,14 @@ class Attendance extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function attendanceStatusChanges()
+    public function StatusChanges()
     {
-        return $this->hasMany(AttendanceStatusChange::class);
+        return $this->hasMany(StatusChange::class);
     }
+
+    public function breakRecords()
+    {
+        return $this->hasMany(BreakRecord::class);
+    }
+
 }

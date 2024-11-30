@@ -54,6 +54,15 @@ class AttendanceSeeder extends Seeder
                     'check_out' => Carbon::createFromTime(17, 50)
                         ->addMinutes(rand(0, 40))
                         ->format('H:i:s'),
+                    // 休憩開始時間（11:50～12:10の範囲でランダム）
+                    'break_start' => Carbon::createFromTime(11, 50)
+                        ->addMinutes(rand(0, 20))
+                        ->format('H:i:s'),
+                    // 休憩終了時間（12:50～13:10の範囲でランダム）
+                    'break_end' => Carbon::createFromTime(12, 50)
+                        ->addMinutes(rand(0, 20))
+                        ->format('H:i:s'),
+                    'remarks' => null, // 備考（デフォルトで null）
                 ]);
 
                 // 次の日に進む

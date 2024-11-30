@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; // 追加
 use App\Models\Attendance; // 追加
-use App\Models\AttendanceStatusChange; // 追加
-use App\Models\AttendanceStatus; // 追加
-use App\Models\AttendanceModification; // 追加
+use App\Models\StatusChange; // 追加
+use App\Models\Status; // 追加
 use Carbon\Carbon; // 追加
 
 
@@ -33,10 +32,10 @@ class AttendanceController extends Controller
         // 勤怠レコードが存在する場合、勤務状態を取得
         if ($attendance) {
             // 最新のステータス変更を取得
-            $lastStatusChange = $attendance->attendanceStatusChanges()->latest('changed_at')->first();
+            $lastStatusChange = $attendance->StatusChanges()->latest('changed_at')->first();
 
             if ($lastStatusChange) {
-                $currentStatus = $lastStatusChange->attendanceStatus->name;
+                $currentStatus = $lastStatusChange->Status->name;
             }
         }
 
@@ -191,6 +190,11 @@ class AttendanceController extends Controller
     // 「勤怠詳細」画面の表示
     public function detail($id)
     {
+        // ログインしていなければログイン画面にリダイレクト
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
         $attendance = Attendance::findOrFail($id); // 該当の勤怠レコードを取得
         $user = $attendance->user; // 勤怠レコードに関連するユーザーを取得
 
