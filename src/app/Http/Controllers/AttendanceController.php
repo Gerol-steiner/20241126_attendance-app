@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Auth; // 追加
 use App\Models\Attendance; // 追加
 use App\Models\AttendanceStatusChange; // 追加
 use App\Models\AttendanceStatus; // 追加
-use Carbon\Carbon;
+use App\Models\AttendanceModification; // 追加
+use Carbon\Carbon; // 追加
 
 
 class AttendanceController extends Controller
@@ -128,66 +129,111 @@ class AttendanceController extends Controller
     }
 
     // 勤怠一覧画面の表示
-public function list(Request $request)
-{
-    $user = Auth::user();
-    $currentMonth = $request->input('month', now()->format('Y-m'));
-    $startDate = Carbon::createFromFormat('Y-m', $currentMonth)->startOfMonth();
-    $endDate = $startDate->copy()->endOfMonth();
+    public function list(Request $request)
+    {
+        $user = Auth::user();
+        $currentMonth = $request->input('month', now()->format('Y-m'));
+        $startDate = Carbon::createFromFormat('Y-m', $currentMonth)->startOfMonth();
+        $endDate = $startDate->copy()->endOfMonth();
 
-    // 一か月分の日付を生成
-    $dates = [];
-    for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
-        $dates[] = $date->copy();
-    }
-
-    // 勤怠データを取得
-    $attendances = Attendance::where('user_id', $user->id)
-        ->whereBetween('date', [$startDate, $endDate])
-        ->get()
-        ->keyBy('date');
-
-    // データを加工してビューに渡す
-    $data = [];
-    foreach ($dates as $date) {
-        $attendance = $attendances->get($date->format('Y-m-d'));
-        $breakTime = null;
-        $breakMinutes = 0;
-
-        if ($attendance && $attendance->break_start && $attendance->break_end) {
-            $breakMinutes = Carbon::parse($attendance->break_start)->diffInMinutes(Carbon::parse($attendance->break_end));
-            $hours = floor($breakMinutes / 60);
-            $minutes = $breakMinutes % 60;
-            $breakTime = sprintf('%d:%02d', $hours, $minutes); // "1:30" の形式にフォーマット
+        // 一か月分の日付を生成
+        $dates = [];
+        for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
+            $dates[] = $date->copy();
         }
 
-        $totalTime = null;
-        if ($attendance && $attendance->check_in && $attendance->check_out) {
-            $totalMinutes = Carbon::parse($attendance->check_in)->diffInMinutes(Carbon::parse($attendance->check_out));
-            $totalMinutes -= $breakMinutes; // 休憩時間を引く
-            $hours = floor($totalMinutes / 60);
-            $minutes = $totalMinutes % 60;
-            $totalTime = sprintf('%d:%02d', $hours, $minutes); // "8:30" の形式にフォーマット
+        // 勤怠データを取得
+        $attendances = Attendance::where('user_id', $user->id)
+            ->whereBetween('date', [$startDate, $endDate])
+            ->get()
+            ->keyBy('date');
+
+        // データを加工してビューに渡す
+        $data = [];
+        foreach ($dates as $date) {
+            $attendance = $attendances->get($date->format('Y-m-d'));
+            $breakTime = null;
+            $breakMinutes = 0;
+
+            if ($attendance && $attendance->break_start && $attendance->break_end) {
+                $breakMinutes = Carbon::parse($attendance->break_start)->diffInMinutes(Carbon::parse($attendance->break_end));
+                $hours = floor($breakMinutes / 60);
+                $minutes = $breakMinutes % 60;
+                $breakTime = sprintf('%d:%02d', $hours, $minutes); // "1:30" の形式にフォーマット
+            }
+
+            $totalTime = null;
+            if ($attendance && $attendance->check_in && $attendance->check_out) {
+                $totalMinutes = Carbon::parse($attendance->check_in)->diffInMinutes(Carbon::parse($attendance->check_out));
+                $totalMinutes -= $breakMinutes; // 休憩時間を引く
+                $hours = floor($totalMinutes / 60);
+                $minutes = $totalMinutes % 60;
+                $totalTime = sprintf('%d:%02d', $hours, $minutes); // "8:30" の形式にフォーマット
+            }
+
+            $data[] = [
+                'date' => $date->format('m/d'),
+                'day' => $date->format('D'),
+                'attendance' => $attendance,
+                'breakTime' => $breakTime,
+                'totalTime' => $totalTime,
+            ];
         }
 
-        $data[] = [
-            'date' => $date->format('m/d'),
-            'day' => $date->format('D'),
-            'attendance' => $attendance,
-            'breakTime' => $breakTime,
-            'totalTime' => $totalTime,
-        ];
+        return view('attendance.list', [
+            'currentMonth' => $startDate,
+            'dates' => $dates,
+            'attendances' => $attendances,
+            'data' => $data,
+        ]);
     }
 
-    return view('attendance.list', [
-        'currentMonth' => $startDate,
-        'dates' => $dates,
-        'attendances' => $attendances,
-        'data' => $data,
-    ]);
-}
+    // 「勤怠詳細」画面の表示
+    public function detail($id)
+    {
+        $attendance = Attendance::findOrFail($id); // 該当の勤怠レコードを取得
+        $user = $attendance->user; // 勤怠レコードに関連するユーザーを取得
 
+        // dateをCarbonインスタンスに変換
+        $attendance->date = Carbon::parse($attendance->date);
 
+        return view('attendance.detail', compact('attendance', 'user'));
+    }
 
+    // 勤怠の「修正申請」
+    public function update(Request $request, $id)
+    {
+        // POSTデータを取得
+        $dateYear = $request->input('date_year');
+        $dateMonthDay = $request->input('date_month_day');
+        $checkIn = $request->input('check_in');
+        $checkOut = $request->input('check_out');
+        $breakStart = $request->input('break_start');
+        $breakEnd = $request->input('break_end');
+        $remarks = $request->input('remarks');
 
+        // 日付を「Y-m-d」の形式に加工
+        $date = Carbon::createFromFormat('Y年m月d日', $dateYear . $dateMonthDay)->format('Y-m-d');
+
+        // 該当するattendanceレコードを取得
+        $attendance = Attendance::where('date', $date)->first();
+
+        if (!$attendance) {
+            return redirect()->route('attendance.index')->with('error', '該当する勤怠レコードが存在しません。');
+        }
+
+        // attendance_modificationsテーブルに新しいレコードを作成
+        $modification = new AttendanceModification();
+        $modification->attendance_id = $attendance->id;
+        $modification->date = $date;
+        $modification->check_in = $checkIn;
+        $modification->check_out = $checkOut;
+        $modification->break_start = $breakStart;
+        $modification->break_end = $breakEnd;
+        $modification->remarks = $remarks;
+        $modification->save();
+
+        // 成功時にリダイレクト
+        return redirect()->route('attendance.index')->with('success', '修正申請が完了しました。');
+    }
 }

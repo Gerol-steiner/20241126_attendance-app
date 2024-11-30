@@ -44,4 +44,6 @@ Route::post('/attendance/check-out', [AttendanceController::class, 'checkOut'])-
 // 「勤怠一覧画面」
 Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendance.list');
 // 「勤怠詳細画面」
-Route::get('/attendance/{id}', [AttendanceController::class, 'show'])->name('attendance.show');
+Route::get('/attendance/{id}', [AttendanceController::class, 'detail'])->name('attendance.detail');
+// 勤怠修正申請を処理するルート
+Route::post('/attendance/{id}/update', [AttendanceController::class, 'update'])->name('attendance.update');

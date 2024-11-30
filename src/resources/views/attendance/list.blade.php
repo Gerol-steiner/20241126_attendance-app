@@ -101,7 +101,7 @@
                         <!-- 詳細リンク -->
                         <td>
                             @if ($entry['attendance'])
-                                <a href="{{ route('attendance.show', $entry['attendance']->id) }}">詳細</a>
+                                <a href="{{ route('attendance.detail', $entry['attendance']->id) }}">詳細</a>
                             @else
                                 -
                             @endif
