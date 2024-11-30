@@ -45,13 +45,21 @@
         <h1>勤怠一覧</h1>
         <!-- 月の選択 -->
         <div class="month-navigation">
-            <a href="{{ route('attendance.list', ['month' => $currentMonth->copy()->subMonth()->format('Y-m')]) }}">←前月</a>
-            <span>
-                <!-- カレンダーアイコンと現在の月 -->
+            <!-- 前月リンク -->
+            <a href="{{ route('attendance.list', ['month' => $currentMonth->copy()->subMonth()->format('Y-m')]) }}" class="month-link">
+                <img src="{{ asset('images/arrow-left.svg') }}" alt="前月" class="arrow-icon">
+                前月
+            </a>
+            <!-- カレンダーアイコンと現在の月 -->
+            <span class="month-display">
                 <img src="{{ asset('images/calendar_icon.svg') }}" alt="カレンダーアイコン" class="calendar-icon">
-                {{ $currentMonth->format('Y/m') }}
+                {{ mb_convert_kana($currentMonth->format('Y/m'), 'N') }}
             </span>
-            <a href="{{ route('attendance.list', ['month' => $currentMonth->copy()->addMonth()->format('Y-m')]) }}">翌月→</a>
+            <!-- 翌月リンク -->
+            <a href="{{ route('attendance.list', ['month' => $currentMonth->copy()->addMonth()->format('Y-m')]) }}" class="month-link">
+                翌月
+                <img src="{{ asset('images/arrow-right.svg') }}" alt="翌月" class="arrow-icon">
+            </a>
         </div>
 
         <!-- 勤怠テーブル -->

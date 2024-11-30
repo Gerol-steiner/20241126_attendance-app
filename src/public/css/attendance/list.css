@@ -64,7 +64,6 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    border:solid 1px red;
 }
 
 /* タイトル 「勤怠一覧」*/
@@ -77,11 +76,37 @@ main {
 
 /*カレンダーナビケーション div*/
 .month-navigation {
+    display: flex;
+        justify-content: space-between;
+        align-items: center;
     width: 100%;
     padding: 20px;
     background-color: #ffffff;
     margin-bottom: 30px;
     border-radius: 10px;
+}
+
+/*カレンダーナビケーション 「＜－前月」「翌月ー＞」*/
+.month-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    font-size: 16px;
+}
+
+/*カレンダーナビケーション div「<-先月、翌月->」:ホバー時*/
+.month-link:hover {
+    text-decoration: underline;
+}
+
+/* アイコン画像「＜－」「ー＞」*/
+.arrow-icon {
+    width: 24px;
+    margin: 0 5px;
+    height: auto;
+    vertical-align: middle;
+    transform: translateY(-1px);
 }
 
 /*カレンダーナビケーション div「年/月」*/
@@ -98,15 +123,19 @@ main {
     text-decoration: none;
 }
 
-/*カレンダーナビケーション div「<-先月、翌月->」:ホバー時*/
-.month-navigation a:hover {
-    text-decoration: underline;
+/* 「カレンダーアイコンと現在の月」 */
+.month-display {
+    font: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 /*カレンダーアイコン*/
 .calendar-icon {
     width: 28x;
     height: 28px;
+    transform: translateY(-1px);
 }
 
 /* テーブル全体のスタイリング */
@@ -156,4 +185,28 @@ main {
 }
 
 /* タブレット（768-850px）向けのスタイル */
-@media screen and (max-width: 850px) {}
+@media screen and (max-width: 850px) {
+    .header_inner {
+            display: flex;
+            height: 70px;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+
+        /*ヘッダー右側のnavスペース*/
+        .header__nav {
+            width: 400px;
+            font-size: 16px;
+        }
+
+        /*ログアウトbutton*/
+        .header__logout-button {
+            width: 100px;
+            font-size: 16px;
+        }
+
+        /* 一番外の div  */
+        .attendance-wrapper {
+            width: 87%;
+        }
+}
