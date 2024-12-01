@@ -57,6 +57,49 @@ main {
     background-color: #E1E1E1;
 }
 
+
+/* input 内の右端への単位「年」の表示*/
+.year-input-container {
+    position: relative;
+    display: inline-block;
+}
+
+.year-input {
+    padding-right: 2em;
+}
+
+.year-suffix {
+    position: absolute;
+    right: 0.5em;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+
+.year-input {
+    cursor: pointer;
+}
+
+.year-popup {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.year-popup div {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.year-popup div:hover {
+    background-color: #f0f0f0;
+}
+
+
 /* 一番外の div  */
 .attendance-wrapper {
     width: 65%;

@@ -8,6 +8,10 @@
     <title>勤怠管理アプリ</title>
     <link rel="stylesheet" href="{{ asset('css/sanitize.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/attendance/detail.css') }}" />
+    <!-- Flatpickrのスタイルシートの読み込み -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- FlatpickrのJavaScriptライブラリの読み込み -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 </head>
 
@@ -38,7 +42,8 @@
     @endif
 
 
-
+{{ $attendance->date->format('n月j日') }}
+defaultDate: "{{ $attendance->date->format('Y-m-d') }}"
 
 
     <div class="attendance-wrapper">
@@ -52,24 +57,30 @@
                 <input type="text" id="name" name="name" value="{{ $user->name }}" readonly>
             </div>
             <!-- 日付1 -->
-            <div>
-                <label for="date_year">日付（年）:</label>
-                <input type="text" id="date_year" name="date_year" value="{{ $attendance->date->format('Y年') }}" readonly>
-            </div>
-            <!-- 日付2 -->
-            <div>
-                <label for="date_month_day">日付（月日）:</label>
-                <input type="text" id="date_month_day" name="date_month_day" value="{{ $attendance->date->format('m月d日') }}" readonly>
-            </div>
+<div>
+    <label for="date_year">日付（年）:</label>
+    <div class="year-input-container">
+        <input type="number" id="date_year" name="date_year" value="{{ $attendance->date->format('Y') }}" class="year-input" readonly>
+        <span class="year-suffix">年</span>
+    </div>
+</div>
+
+<div>
+    <label for="date_month_day">日付（月日）:</label>
+    <input type="text" id="date_month_day" name="date_month_day" value="{{ $attendance->date->format('n月j日') }}">
+</div>
+
+
+
             <!-- 出勤時刻 -->
             <div>
                 <label for="check_in">出勤時刻:</label>
-                <input type="time" id="check_in" name="check_in" value="{{ $attendance->check_in }}">
+                <input type="text" id="check_in" name="check_in" value="{{ $attendance->check_in }}">
             </div>
             <!-- 退勤時刻 -->
             <div>
                 <label for="check_out">退勤時刻:</label>
-                <input type="time" id="check_out" name="check_out" value="{{ $attendance->check_out }}">
+                <input type="text" id="check_out" name="check_out" value="{{ $attendance->check_out }}">
             </div>
             <!-- 備考 -->
             <div>
@@ -87,5 +98,53 @@
 
 
     </main>
+
+
+    <script>
+        // flatpicker による「日付（〇月〇日）」部の表示
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr("#date_month_day", {
+                dateFormat: "n月j日", // 表示形式を設定
+                locale: "ja",
+                disableMobile: true
+            });
+
+            // 入力欄に初期値を設定
+            const dateInput = document.getElementById("date_month_day");
+            if (!dateInput.value) {
+                dateInput.value = "{{ $attendance->date->format('n月j日') }}";
+            }
+        });
+
+        // 日付「xxxx年」のポップアップ表示
+        document.addEventListener('DOMContentLoaded', function() {
+            const yearInput = document.getElementById('date_year');
+            const currentYear = new Date().getFullYear();
+
+            yearInput.addEventListener('click', function() {
+                const popup = document.createElement('div');
+                popup.className = 'year-popup';
+                
+                for (let year = currentYear - 10; year <= currentYear + 10; year++) {
+                    const yearOption = document.createElement('div');
+                    yearOption.textContent = year;
+                    yearOption.addEventListener('click', function() {
+                        yearInput.value = year;
+                        document.body.removeChild(popup);
+                    });
+                    popup.appendChild(yearOption);
+                }
+
+                document.body.appendChild(popup);
+                
+                // ポップアップの位置を調整
+                const rect = yearInput.getBoundingClientRect();
+                popup.style.top = rect.bottom + 'px';
+                popup.style.left = rect.left + 'px';
+            });
+        });
+    </script>
+</body>
+
 
 </html>
