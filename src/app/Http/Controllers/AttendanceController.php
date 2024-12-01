@@ -158,6 +158,7 @@ class AttendanceController extends Controller
         // 勤怠データを取得
         $attendances = Attendance::where('user_id', $user->id)
             ->whereBetween('date', [$startDate, $endDate])
+            ->with('breaktimes') // Breaktime モデルをロード
             ->get()
             ->keyBy('date');
 
@@ -168,11 +169,19 @@ class AttendanceController extends Controller
             $breakTime = null;
             $breakMinutes = 0;
 
-            if ($attendance && $attendance->break_start && $attendance->break_end) {
-                $breakMinutes = Carbon::parse($attendance->break_start)->diffInMinutes(Carbon::parse($attendance->break_end));
-                $hours = floor($breakMinutes / 60);
-                $minutes = $breakMinutes % 60;
-                $breakTime = sprintf('%d:%02d', $hours, $minutes); // "1:30" の形式にフォーマット
+            if ($attendance) {
+                // 休憩時間の計算（breaktimes テーブルから集計）
+                foreach ($attendance->breaktimes as $breaktime) {
+                    if ($breaktime->break_start && $breaktime->break_end) {
+                        $breakMinutes += Carbon::parse($breaktime->break_start)
+                            ->diffInMinutes(Carbon::parse($breaktime->break_end));
+                    }
+                }
+                if ($breakMinutes > 0) {
+                    $hours = floor($breakMinutes / 60);
+                    $minutes = $breakMinutes % 60;
+                    $breakTime = sprintf('%d:%02d', $hours, $minutes); // "1:30" の形式
+                }
             }
 
             $totalTime = null;

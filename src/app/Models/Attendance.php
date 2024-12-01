@@ -39,9 +39,9 @@ class Attendance extends Model
         return $this->hasMany(StatusChange::class);
     }
 
-    public function breakRecords()
+    public function breaktimes()
     {
-        return $this->hasMany(BreakRecord::class);
+        return $this->hasMany(BreakTime::class);
     }
 
 }
