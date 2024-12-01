@@ -19,10 +19,6 @@ class CreateAttendancesTable extends Migration
             $table->date('date'); // 勤務日
             $table->time('check_in')->nullable(); // 出勤時刻
             $table->time('check_out')->nullable(); // 退勤時刻
-            //以下は修正時に使用されるカラム
-            $table->foreignId('edited_by')->nullable()->constrained('users')->nullOnDelete(); // 修正申請の起案者ID
-            $table->foreignId('approved_by')->nullable()->constrained('users')->nullOnDelete(); // 修正申請の承認者ID
-            $table->string('remarks', 255)->nullable(); // 備考
             $table->timestamps(); // created_at, updated_at
         });
     }

@@ -4,9 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Attendance;
-use App\Models\BreakRecord;
+use App\Models\BreakTime;
 
-class BreakRecordSeeder extends Seeder
+class BreakTimeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -24,7 +24,7 @@ class BreakRecordSeeder extends Seeder
         foreach ($attendances as $attendance) {
             switch ($pattern) {
                 case 0: // パターン１: 1つの休憩
-                    BreakRecord::create([
+                    BreakTime::create([
                         'attendance_id' => $attendance->id,
                         'break_start' => '12:00:00',
                         'break_end' => '13:00:00',
@@ -32,12 +32,12 @@ class BreakRecordSeeder extends Seeder
                     break;
 
                 case 1: // パターン２: 2つの休憩
-                    BreakRecord::create([
+                    BreakTime::create([
                         'attendance_id' => $attendance->id,
                         'break_start' => '12:00:00',
                         'break_end' => '12:30:00',
                     ]);
-                    BreakRecord::create([
+                    BreakTime::create([
                         'attendance_id' => $attendance->id,
                         'break_start' => '15:00:00',
                         'break_end' => '15:30:00',
@@ -45,17 +45,17 @@ class BreakRecordSeeder extends Seeder
                     break;
 
                 case 2: // パターン３: 3つの休憩
-                    BreakRecord::create([
+                    BreakTime::create([
                         'attendance_id' => $attendance->id,
                         'break_start' => '10:00:00',
                         'break_end' => '10:15:00',
                     ]);
-                    BreakRecord::create([
+                    BreakTime::create([
                         'attendance_id' => $attendance->id,
                         'break_start' => '12:05:00',
                         'break_end' => '12:30:00',
                     ]);
-                    BreakRecord::create([
+                    BreakTime::create([
                         'attendance_id' => $attendance->id,
                         'break_start' => '15:00:00',
                         'break_end' => '15:20:00',

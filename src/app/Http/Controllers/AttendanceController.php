@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth; // 追加
 use App\Models\Attendance; // 追加
 use App\Models\StatusChange; // 追加
 use App\Models\Status; // 追加
+use App\Models\BreakTime; // 追加
 use Carbon\Carbon; // 追加
 
 
@@ -57,7 +58,7 @@ class AttendanceController extends Controller
         $attendance->save();
 
         // 勤務状態を記録
-        $this->logAttendanceStatusChange($attendance->id, '出勤中');
+        $this->logStatusChange($attendance->id, '出勤中');
 
         // 勤怠画面にリダイレクト
         return redirect()->route('attendance.index')->with('success', '出勤登録が完了しました');
@@ -66,34 +67,47 @@ class AttendanceController extends Controller
     //「休憩入ボタン」押下
     public function startBreak(Request $request)
     {
+        // 1. 該当する勤怠レコードを取得
         $attendance = Attendance::where('user_id', Auth::id())
             ->where('date', now()->toDateString())
             ->firstOrFail();
 
-        $attendance->break_start = now()->toTimeString();
-        $attendance->save();
+        // 2. breaktimes テーブルに新しい休憩開始記録を作成
+        $breaktime = new Breaktime();
+        $breaktime->attendance_id = $attendance->id;
+        $breaktime->break_start = now()->toTimeString(); // 現在の時間を休憩開始時間として格納
+        $breaktime->save();
 
-        // 勤務状態を記録
-        $this->logAttendanceStatusChange($attendance->id, '休憩中');
+        // 3. 勤務状態を記録
+        $this->logStatusChange($attendance->id, '休憩中');
 
-        // 勤怠画面にリダイレクト
+        // 4. 勤怠画面にリダイレクト
         return redirect()->route('attendance.index')->with('success', '休憩開始を記録しました');
     }
+
 
     //「休憩戻ボタン」押下
     public function endBreak(Request $request)
     {
+        // 1. 該当する勤怠レコードを取得
         $attendance = Attendance::where('user_id', Auth::id())
             ->where('date', now()->toDateString())
             ->firstOrFail();
 
-        $attendance->break_end = now()->toTimeString();
-        $attendance->save();
+        // 2. breaktimes テーブルから該当レコードを取得（最新の休憩レコード）
+        $breaktime = Breaktime::where('attendance_id', $attendance->id)
+            ->whereNull('break_end') // まだ休憩終了時間が記録されていないレコード
+            ->latest('break_start') // 最新の休憩開始時間を取得
+            ->firstOrFail();
 
-        // 勤務状態を記録
-        $this->logAttendanceStatusChange($attendance->id, '出勤中');
+        // 3. break_end カラムに現在の時刻を設定
+        $breaktime->break_end = now()->toTimeString();
+        $breaktime->save();
 
-                // 勤怠画面にリダイレクト
+        // 4. 勤務状態を記録
+        $this->logStatusChange($attendance->id, '出勤中');
+
+        // 5. 勤怠画面にリダイレクト
         return redirect()->route('attendance.index')->with('success', '休憩終了を記録しました');
     }
 
@@ -108,21 +122,21 @@ class AttendanceController extends Controller
         $attendance->save();
 
         // 勤務状態を記録
-        $this->logAttendanceStatusChange($attendance->id, '退勤済');
+        $this->logStatusChange($attendance->id, '退勤済');
 
                 // 勤怠画面にリダイレクト
         return redirect()->route('attendance.index')->with('success', '退勤登録が完了しました');
     }
 
     // 勤務状態変更を記録するヘルパーメソッド
-    private function logAttendanceStatusChange($attendanceId, $statusName)
+    private function logStatusChange($attendanceId, $statusName)
     {
         // 勤務状態を取得
-        $status = AttendanceStatus::where('name', $statusName)->firstOrFail();
+        $status = Status::where('name', $statusName)->firstOrFail();
 
-        $change = new AttendanceStatusChange();
+        $change = new StatusChange();
         $change->attendance_id = $attendanceId;
-        $change->attendance_status_id = $status->id;
+        $change->status_id = $status->id;
         $change->changed_at = now();
         $change->save();
     }

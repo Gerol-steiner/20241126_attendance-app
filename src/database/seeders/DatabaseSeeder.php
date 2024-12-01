@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
         DB::table('attendances')->truncate();
         DB::table('statuses')->truncate();
         DB::table('status_changes')->truncate();
-        DB::table('break_records')->truncate();
+        DB::table('break_times')->truncate();
 
         // 外部キー制約を有効化
         Schema::enableForeignKeyConstraints();
@@ -32,6 +32,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
         $this->call(AttendanceSeeder::class);
         $this->call(StatusSeeder::class);
-        $this->call(BreakRecordSeeder::class);
+        $this->call(BreakTimeSeeder::class);
     }
 }
