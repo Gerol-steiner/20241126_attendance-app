@@ -218,8 +218,21 @@ class AttendanceController extends Controller
             return redirect()->route('login');
         }
 
-        $attendance = Attendance::findOrFail($id); // 該当の勤怠レコードを取得
-        $user = $attendance->user; // 勤怠レコードに関連するユーザーを取得
+        // 該当の「勤怠レコード」および「breaktimesレコード」をコレクションとして取得
+        $attendance = Attendance::with('breaktimes')->findOrFail($id);
+
+        // 勤怠レコードに関連するユーザーを取得
+        $user = $attendance->user;
+
+        // 「ceach_in」「chech_out」について「時間：分」の形式に変換
+        $attendance->check_in = Carbon::parse($attendance->check_in)->format('H:i');
+        $attendance->check_out = Carbon::parse($attendance->check_out)->format('H:i');
+
+        // 「break_start」「break_in」について「時間：分」の形式に変換
+        foreach ($attendance->breaktimes as $breaktime) {
+            $breaktime->break_start = Carbon::parse($breaktime->break_start)->format('H:i');
+            $breaktime->break_end = Carbon::parse($breaktime->break_end)->format('H:i');
+        }
 
         // dateをCarbonインスタンスに変換
         $attendance->date = Carbon::parse($attendance->date);

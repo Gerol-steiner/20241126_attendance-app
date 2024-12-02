@@ -41,57 +41,81 @@
         <p style="margin: 0;">ログインしていません。</p>
     @endif
 
-
-{{ $attendance->date->format('n月j日') }}
-defaultDate: "{{ $attendance->date->format('Y-m-d') }}"
-
-
     <div class="attendance-wrapper">
         <h1>勤怠詳細</h1>
 
-        <form action="{{ route('attendance.update', $attendance->id) }}" method="POST">
-            @csrf
-            <!-- 名前 -->
-            <div>
-                <label for="name">名前:</label>
-                <input type="text" id="name" name="name" value="{{ $user->name }}" readonly>
-            </div>
-            <!-- 日付1 -->
-<div>
-    <label for="date_year">日付（年）:</label>
-    <div class="year-input-container">
-        <input type="number" id="date_year" name="date_year" value="{{ $attendance->date->format('Y') }}" class="year-input" readonly>
-        <span class="year-suffix">年</span>
-    </div>
-</div>
+            <form action="{{ route('attendance.update', $attendance->id) }}" method="POST" class="attendance-form">
+                @csrf
+                <table class="attendance-detail-table">
+                    <!-- 1行目 -->
+                    <tr>
+                        <td class="col-1">名前</td>
+                        <td class="col-2" colspan="4"><span id="name">{{ $user->name }}</span></td>
+                    </tr>
+                    <!-- 2行目 -->
+                    <tr>
+                        <td class="col-1">日付</td>
+                        <td class="col-2">
+                            <div class="year-input-container">
+                                <input type="number" id="date_year" name="date_year" value="{{ $attendance->date->format('Y') }}" readonly>
+                                <span class="year-suffix">年</span>
+                            </div>
+                        </td>
+                        <td class="col-3"></td> <!-- 空欄 -->
+                        <td class="col-4">
+                            <input type="text" id="date_month_day" name="date_month_day" value="{{ $attendance->date->format('n月j日') }}">
+                        </td>
+                        <td class="col-5"></td> <!-- 空白の列 -->
+                    </tr>
+                    <!-- 3行目 -->
+                    <tr>
+                        <td class="col-1">出勤・退勤</td>
+                        <td class="col-2">
+                            <input type="time" id="check_in" name="check_in" value="{{ $attendance->check_in }}" class="time-input" >
+                        </td>
+                        <td class="col-3">
+                            <span class="separator">～</span>
+                        </td>
+                        <td class="col-4">
+                            <input type="time" id="check_out" name="check_out" value="{{ $attendance->check_out }}" class="time-input">
+                        </td>
+                        <td class="col-5"></td> <!-- 空白の列 -->
+                    </tr>
+                    <!-- 4行目 -->
+                    @forelse ($attendance->breaktimes as $index => $breaktime)
+                        <tr>
+                            <td class="col-1">休憩{{ $index + 1 }}</td>
+                            <td class="col-2">
+                                <input type="time" name="breaktimes[{{ $breaktime->id }}][start]" value="{{ $breaktime->break_start }}" placeholder="休憩開始" class="time-input">
+                            </td>
+                            <td class="col-3">
+                                <span class="separator">～</span>
+                            </td>
+                            <td class="col-4">
+                                <input type="time" name="breaktimes[{{ $breaktime->id }}][end]" value="{{ $breaktime->break_end }}" placeholder="休憩終了" class="time-input">
+                            </td>
+                            <td class="col-5"></td> <!-- 空白の列 -->
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5">休憩時間は登録されていません。</td> <!-- colspanを5に変更 -->
+                        </tr>
+                    @endforelse
+                    <!-- 5行目 -->
+                    <tr>
+                        <td class="col-1">備考</td>
+                        <td colspan="3" class="col-2">
+                            <textarea id="remarks" name="remarks" placeholder="申請理由を記載してください"></textarea>
+                        </td>
+                        <td class="col-5"></td> <!-- 空白の列 -->
+                    </tr>
+                </table>
 
-<div>
-    <label for="date_month_day">日付（月日）:</label>
-    <input type="text" id="date_month_day" name="date_month_day" value="{{ $attendance->date->format('n月j日') }}">
-</div>
 
-
-
-            <!-- 出勤時刻 -->
-            <div>
-                <label for="check_in">出勤時刻:</label>
-                <input type="text" id="check_in" name="check_in" value="{{ $attendance->check_in }}">
-            </div>
-            <!-- 退勤時刻 -->
-            <div>
-                <label for="check_out">退勤時刻:</label>
-                <input type="text" id="check_out" name="check_out" value="{{ $attendance->check_out }}">
-            </div>
-            <!-- 備考 -->
-            <div>
-                <label for="remarks">備考:</label>
-                <input type="text" id="remarks" name="remarks" placeholder="修正内容を記載してください">
-            </div>
-            <!-- 修正申請ボタン -->
-            <div>
-                <button type="submit">修正申請</button>
-            </div>
-        </form>
+                <div class="button-container">
+                    <button type="submit" class="submit-button">修正</button>
+                </div>
+            </form>
 
 
     </div>
@@ -116,6 +140,8 @@ defaultDate: "{{ $attendance->date->format('Y-m-d') }}"
             }
         });
 
+
+
         // 日付「xxxx年」のポップアップ表示
         document.addEventListener('DOMContentLoaded', function() {
             const yearInput = document.getElementById('date_year');
@@ -124,7 +150,7 @@ defaultDate: "{{ $attendance->date->format('Y-m-d') }}"
             yearInput.addEventListener('click', function() {
                 const popup = document.createElement('div');
                 popup.className = 'year-popup';
-                
+
                 for (let year = currentYear - 10; year <= currentYear + 10; year++) {
                     const yearOption = document.createElement('div');
                     yearOption.textContent = year;
@@ -136,11 +162,11 @@ defaultDate: "{{ $attendance->date->format('Y-m-d') }}"
                 }
 
                 document.body.appendChild(popup);
-                
+
                 // ポップアップの位置を調整
                 const rect = yearInput.getBoundingClientRect();
                 popup.style.top = rect.bottom + 'px';
-                popup.style.left = rect.left + 'px';
+                popup.style.left = rect.left + 32 + 'px';
             });
         });
     </script>

@@ -52,35 +52,122 @@ body {
     color: #ffffff;
 }
 
+
+
 /* <main>タグ */
 main {
     background-color: #E1E1E1;
+    padding-top: 20px;
+    padding-bottom: 70px;
 }
 
+/* 一番外の div  */
+.attendance-wrapper {
+    width: 60%;
+    margin:0 auto;
+}
+
+/* タイトル 「勤怠詳細」*/
+.attendance-wrapper h1 {
+    text-align: left;
+    width: 100%;
+    border-left: solid 6px #000000;
+    padding-left: 14px;
+    margin-top: 20px;
+}
+
+/* form タグ */
+.attendance-form {
+    width: 100%;
+}
+
+/* テーブル全体のスタイリング */
+.attendance-detail-table {
+    color: #737373;
+    width: 100%;
+    margin: 20px 0;
+    font-size: 17px;
+    background-color: #ffffff;
+    border: solid 1px #E1E1E1;
+    /* 「border-radius」のために以下４行が必要 */
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* テーブルボディ */
+.attendance-detail-table td {
+    color: #737373;
+    padding: 23px;
+    background-color: #ffffff;
+    border-bottom: 2px solid #E1E1E1;
+    text-align: left;
+}
+
+/* テーブル内の input */
+.attendance-detail-table td input {
+    width: 130px;
+    height: 38px;
+    border: solid 1px #E1E1E1;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+/* テーブル内の textarea */
+.attendance-detail-table td textarea {
+    width: 100%;
+    height: 80px;
+    padding: 10px;
+    border: solid 1px #E1E1E1;
+    border-radius: 4px;
+    font-size: 17px;
+    resize: none;
+}
+
+/* テーブル内の span タグ「名前」「～」 */
+.attendance-detail-table span {
+    color: rgb(0, 0, 0);
+}
+
+/* テーブル「１列目の幅」 */
+.attendance-detail-table .col-1 {
+    width: 27%;
+    padding-left: 80px;
+}
+/* テーブル「２列目の幅」 */
+.attendance-detail-table .col-2 {
+    width: 21%;
+}
+/* テーブル「３列目の幅」 */
+.attendance-detail-table .col-3 {
+    width: 10%;
+}
+/* テーブル「４列目の幅」 */
+.attendance-detail-table .col-4 {
+    width: 20%;
+}
 
 /* input 内の右端への単位「年」の表示*/
 .year-input-container {
     position: relative;
     display: inline-block;
 }
-
+/* input 内の右端への単位「年」の表示*/
 .year-input {
     padding-right: 2em;
+    cursor: pointer;
 }
-
+/* input 内の右端への単位「年」の表示*/
 .year-suffix {
     position: absolute;
-    right: 0.5em;
-    top: 50%;
+    right: 0.7em;
+    top: 51%;
     transform: translateY(-50%);
     pointer-events: none;
 }
 
-
-.year-input {
-    cursor: pointer;
-}
-
+/* 「xxxx年」のポップアップ */
 .year-popup {
     position: absolute;
     background: white;
@@ -99,133 +186,34 @@ main {
     background-color: #f0f0f0;
 }
 
+/* 「備考」用 input */
+input[name="remarks"] {
+    height: 30px;
+}
 
-/* 一番外の div  */
-.attendance-wrapper {
-    width: 65%;
-    margin:0 auto;
+
+.time-input::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+/* 「修正」ボタン：コンテナ */
+.button-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: flex-end;
+    margin-top: 50px;
 }
 
-/* タイトル 「勤怠一覧」*/
-.attendance-wrapper h1 {
-    text-align: left;
-    width: 100%;
-    border-left: solid 6px #000000;
-    padding-left: 14px;
+/* 「修正」ボタン */
+.submit-button {
+    background-color: black;
+    color: white;
+    width: 120px;
+    height: 40px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
 }
 
-/*カレンダーナビケーション div*/
-.month-navigation {
-    display: flex;
-        justify-content: space-between;
-        align-items: center;
-    width: 100%;
-    padding: 20px;
-    background-color: #ffffff;
-    margin-bottom: 30px;
-    border-radius: 10px;
-}
-
-/*カレンダーナビケーション 「＜－前月」「翌月ー＞」*/
-.month-link {
-    display: inline-flex;
-    align-items: center;
-    text-decoration: none;
-    color: inherit;
-    font-size: 16px;
-}
-
-/*カレンダーナビケーション div「<-先月、翌月->」:ホバー時*/
-.month-link:hover {
-    text-decoration: underline;
-}
-
-/* アイコン画像「＜－」「ー＞」*/
-.arrow-icon {
-    width: 24px;
-    margin: 0 5px;
-    height: auto;
-    vertical-align: middle;
-    transform: translateY(-1px);
-}
-
-/*カレンダーナビケーション div「年/月」*/
-.month-navigation span {
-    color: #000000;
-    font-size: 20px;
-    text-decoration: none;
-}
-
-/*カレンダーナビケーション div「<-先月、翌月->」*/
-.month-navigation a {
-    color: #737373;
-    font-size: 20px;
-    text-decoration: none;
-}
-
-/* 「カレンダーアイコンと現在の月」 */
-.month-display {
-    font: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-/*カレンダーアイコン*/
-.calendar-icon {
-    width: 28x;
-    height: 28px;
-    transform: translateY(-1px);
-}
-
-/* テーブル全体のスタイリング */
-.attendance-table {
-    width: 100%;
-    margin: 20px 0;
-    font-size: 18px;
-    text-align: center;
-    /* 「border-radius」のために以下４行が必要 */
-    border-radius: 16px;
-    border-collapse: separate;
-    border-spacing: 0;
-    overflow: hidden;
-}
-
-/* テーブルヘッダー */
-.attendance-table thead th {
-    color: #737373;
-    background-color: #ffffff;
-    padding: 14px;
-    border-bottom: 4px solid #E1E1E1;
-}
-
-/* テーブルボディ */
-.attendance-table tbody td {
-    color: #737373;
-    padding: 10px;
-    background-color: #ffffff;
-    border-bottom: 2px solid #E1E1E1;
-}
-
-/* テーブルの「詳細」列に padding-right を設定 */
-.attendance-table td:last-child,
-.attendance-table th:last-child {
-    padding-right: 35px;
-}
-
-/* 詳細リンク */
-.attendance-table tbody td a {
-    color: #000000;
-    text-decoration: none;
-}
-
-/* 詳細リンクのホバー時 */
-.attendance-table tbody td a:hover {
-    text-decoration: underline;
-}
 
 /* タブレット（768-850px）向けのスタイル */
 @media screen and (max-width: 850px) {
