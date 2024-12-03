@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\Admin\AdminAttendanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +17,14 @@ use App\Http\Controllers\AttendanceController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+// 【管理者】ログイン
+Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
+
+// 【管理者】勤怠一覧（日ごと）
+Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'dailyList'])->name('admin.attendance.daily_list');
+
 
 
 

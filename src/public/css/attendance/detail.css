@@ -191,7 +191,7 @@ input[name="remarks"] {
     height: 30px;
 }
 
-
+/* 時間入力用 input（tipe="time"）の時計アイコンを非表示にする */
 .time-input::-webkit-calendar-picker-indicator {
     display: none;
 }
@@ -210,7 +210,9 @@ input[name="remarks"] {
     width: 120px;
     height: 40px;
     border: none;
-    border-radius: 3px;
+    font-size: 18px;
+    font-weight: 400;
+    border-radius: 5px;
     cursor: pointer;
 }
 
@@ -239,5 +241,11 @@ input[name="remarks"] {
         /* 一番外の div  */
         .attendance-wrapper {
             width: 87%;
+        }
+
+        /* テーブル「１列目の幅」 */
+        .attendance-detail-table .col-1 {
+            width: 28%;
+            padding-left: 40px;
         }
 }

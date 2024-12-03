@@ -145,13 +145,14 @@
         // 日付「xxxx年」のポップアップ表示
         document.addEventListener('DOMContentLoaded', function() {
             const yearInput = document.getElementById('date_year');
-            const currentYear = new Date().getFullYear();
+            const currentYear = new Date().getFullYear(); // 現在の年を取得
 
             yearInput.addEventListener('click', function() {
                 const popup = document.createElement('div');
                 popup.className = 'year-popup';
 
-                for (let year = currentYear - 10; year <= currentYear + 10; year++) {
+                // 現在の年を含む過去5年分を表示
+                for (let year = currentYear - 4; year <= currentYear; year++) {
                     const yearOption = document.createElement('div');
                     yearOption.textContent = year;
                     yearOption.addEventListener('click', function() {
@@ -165,10 +166,10 @@
 
                 // ポップアップの位置を調整
                 const rect = yearInput.getBoundingClientRect();
-                popup.style.top = rect.bottom + 'px';
+                popup.style.top = rect.bottom + 135 + 'px';
                 popup.style.left = rect.left + 32 + 'px';
             });
-        });
+        })
     </script>
 </body>
 

@@ -144,6 +144,11 @@ class AttendanceController extends Controller
     // 勤怠一覧画面の表示
     public function list(Request $request)
     {
+                // ログインしていなければログイン画面にリダイレクト
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
         $user = Auth::user();
         $currentMonth = $request->input('month', now()->format('Y-m'));
         $startDate = Carbon::createFromFormat('Y-m', $currentMonth)->startOfMonth();
@@ -167,17 +172,20 @@ class AttendanceController extends Controller
         foreach ($dates as $date) {
             $attendance = $attendances->get($date->format('Y-m-d'));
             $breakTime = null;
-            $breakMinutes = 0;
+            $breakMinutes = null;
 
             if ($attendance) {
                 // 休憩時間の計算（breaktimes テーブルから集計）
                 foreach ($attendance->breaktimes as $breaktime) {
-                    if ($breaktime->break_start && $breaktime->break_end) {
+                    // 各カラムが両方とも「nullでない」とき
+                    if (!empty($breaktime->break_start) && !empty($breaktime->break_end)) {
                         $breakMinutes += Carbon::parse($breaktime->break_start)
                             ->diffInMinutes(Carbon::parse($breaktime->break_end));
                     }
                 }
-                if ($breakMinutes > 0) {
+                // 休憩時間が存在する場合のみフォーマット
+                // 休憩時間をフォーマット
+                if ($breakMinutes !== null) { // 計算結果がある場合のみフォーマット
                     $hours = floor($breakMinutes / 60);
                     $minutes = $breakMinutes % 60;
                     $breakTime = sprintf('%d:%02d', $hours, $minutes); // "1:30" の形式
@@ -224,14 +232,24 @@ class AttendanceController extends Controller
         // 勤怠レコードに関連するユーザーを取得
         $user = $attendance->user;
 
-        // 「ceach_in」「chech_out」について「時間：分」の形式に変換
-        $attendance->check_in = Carbon::parse($attendance->check_in)->format('H:i');
-        $attendance->check_out = Carbon::parse($attendance->check_out)->format('H:i');
+        // 「check_in」「check_out」について「時間：分」の形式に変換
+        $attendance->check_in = $attendance->check_in
+            ? Carbon::parse($attendance->check_in)->format('H:i')
+            : null;
 
-        // 「break_start」「break_in」について「時間：分」の形式に変換
+        $attendance->check_out = $attendance->check_out
+            ? Carbon::parse($attendance->check_out)->format('H:i')
+            : null;
+
+        // 「break_start」「break_end」について「時間：分」の形式に変換
         foreach ($attendance->breaktimes as $breaktime) {
-            $breaktime->break_start = Carbon::parse($breaktime->break_start)->format('H:i');
-            $breaktime->break_end = Carbon::parse($breaktime->break_end)->format('H:i');
+            $breaktime->break_start = $breaktime->break_start
+                ? Carbon::parse($breaktime->break_start)->format('H:i')
+                : null;
+
+            $breaktime->break_end = $breaktime->break_end
+                ? Carbon::parse($breaktime->break_end)->format('H:i')
+                : null;
         }
 
         // dateをCarbonインスタンスに変換

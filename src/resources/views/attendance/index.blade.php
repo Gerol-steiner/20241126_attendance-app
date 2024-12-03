@@ -28,6 +28,7 @@
 
             setInterval(updateClock, 1000); // 1秒ごとに時刻を更新
             updateClock(); // ページ読み込み時に即時更新
+        });
     </script>
 
 </head>
