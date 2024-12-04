@@ -16,6 +16,12 @@ class AdminAuthController extends Controller
         return view('admin.login');
     }
 
+        public function logout()
+    {
+        Auth::logout(); // ログアウト処理
+        return redirect()->route('admin.login')->with('status', 'ログアウトしました。');
+    }
+
     // ログイン処理
     public function login(Request $request)
     {
@@ -31,6 +37,6 @@ class AdminAuthController extends Controller
         Auth::login($user);
 
         // 管理者専用の勤怠一覧画面にリダイレクト
-        return redirect()->route('attendance.list');
+        return redirect()->route('admin.attendance.daily_list');
     }
 }

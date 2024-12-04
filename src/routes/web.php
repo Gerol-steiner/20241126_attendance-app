@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminAttendanceController;
+use App\Http\Controllers\Admin\StaffController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,10 +23,17 @@ use App\Http\Controllers\Admin\AdminAttendanceController;
 Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
 
-// 【管理者】勤怠一覧（日ごと）
+// 【管理者】ログアウト
+Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+
+// 【管理者】勤怠一覧（日次）
 Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'dailyList'])->name('admin.attendance.daily_list');
 
+// 【管理者】スタッフ一覧
+Route::get('/admin/staff/list', [StaffController::class, 'index'])->name('admin.staff.list');
 
+// 【管理者】勤怠一覧（月次）
+Route::get('/admin/attendance/staff/{id}', [AdminAttendanceController::class, 'monthlyList'])->name('admin.attendance.staff.monthly_list');
 
 
 // ユーザー登録ルート
@@ -51,7 +59,7 @@ Route::post('/attendance/start-break', [AttendanceController::class, 'startBreak
 Route::post('/attendance/end-break', [AttendanceController::class, 'endBreak'])->name('attendance.endBreak');
 // 「勤怠画面」：退勤
 Route::post('/attendance/check-out', [AttendanceController::class, 'checkOut'])->name('attendance.checkOut');
-// 「勤怠一覧画面」
+// 「（月次）勤怠一覧画面」
 Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendance.list');
 // 「勤怠詳細画面」
 Route::get('/attendance/{id}', [AttendanceController::class, 'detail'])->name('attendance.detail');

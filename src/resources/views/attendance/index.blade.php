@@ -73,44 +73,54 @@
         </div>
     @endif
 
-    <div>
+    <div class="attendance-center-wrapper">
         <!-- 勤務状態 -->
-        <p id="current-status">
+        <p id="current-status" class="current-status">
             {{ $currentStatus }}
         </p>
 
         <!-- 現在時刻 -->
-        <div id="current-time">
-            <div id="current-date"></div>
-            <div id="current-time-clock"></div>
+        <div class="current-time-wrapper">
+            <div id="current-date" class="current-date"></div>
+            <div id="current-time-clock" class="current-time-clock"></div>
         </div>
 
         <!-- ボタン -->
-        <div>
             @if ($currentStatus === '勤務外')
-                <form method="POST" action="{{ route('attendance.checkIn') }}">
-                    @csrf
-                    <button type="submit" class="action-button">出勤</button>
-                </form>
+                <!-- ボタンが1つのケース -->
+                <div class="single-button-wrapper">
+                    <form method="POST" action="{{ route('attendance.checkIn') }}">
+                        @csrf
+                        <button type="submit" class="action-button">出勤</button>
+                    </form>
+                </div>
             @elseif ($currentStatus === '出勤中')
-                <form method="POST" action="{{ route('attendance.checkOut') }}">
-                    @csrf
-                    <button type="submit" class="action-button">退勤</button>
-                </form>
-                <form method="POST" action="{{ route('attendance.startBreak') }}">
-                    @csrf
-                    <button type="submit" class="action-button">休憩入</button>
-                </form>
+                <!-- ボタンが2つのケース -->
+                <div class="double-button-wrapper">
+                    <form method="POST" action="{{ route('attendance.checkOut') }}">
+                        @csrf
+                        <button type="submit" class="action-button">退勤</button>
+                    </form>
+                    <form method="POST" action="{{ route('attendance.startBreak') }}">
+                        @csrf
+                        <button type="submit" class="action-button break-button">休憩入</button>
+                    </form>
+                </div>
             @elseif ($currentStatus === '休憩中')
-                <form method="POST" action="{{ route('attendance.endBreak') }}">
-                    @csrf
-                    <button type="submit" class="action-button">休憩戻</button>
-                </form>
+                <!-- ボタンが1つのケース -->
+                <div class="single-button-wrapper">
+                    <form method="POST" action="{{ route('attendance.endBreak') }}">
+                        @csrf
+                        <button type="submit" class="action-button break-button">休憩戻</button>
+                    </form>
+                </div>
             @elseif ($currentStatus === '退勤済')
-                <p>お疲れさまでした。</p>
+                <!-- テキストのみのケース -->
+                <div class="single-button-wrapper">
+                    <p class="status-message">お疲れさまでした。</p>
+                </div>
             @endif
-        </div>
-    </div>
+
 
     <!--開発用-->
     @if (Auth::check())
@@ -121,14 +131,19 @@
 
     @if ($attendance)
         <p>attendance_id: {{ $attendance->id }}</p>
-        <p>$currentStatus: {{ $currentStatus }}</p>
         <p>出勤時刻: {{ $attendance->check_in }}</p>
         <p>退勤時刻: {{ $attendance->check_out }}</p>
-        <p>休憩開始: {{ $attendance->break_start }}</p>
-        <p>休憩終了: {{ $attendance->break_end }}</p>
+    @if ($attendance->breaktimes->isNotEmpty())
+        @foreach ($attendance->breaktimes as $index => $breaktime)
+            <p>休憩{{ $index + 1 }}開始: {{ $breaktime->break_start ?? '未記録' }}</p>
+            <p>休憩{{ $index + 1 }}終了: {{ $breaktime->break_end ?? '未記録' }}</p>
+        @endforeach
     @else
-        <p>本日のattendanceレコードはまだありません</p>
+        <p>休憩データはありません。</p>
     @endif
+        @else
+            <p>本日のattendanceレコードはまだありません</p>
+        @endif
 
     </main>
 

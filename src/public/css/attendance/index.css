@@ -1,6 +1,7 @@
 body {
     font-weight: 600;
     margin: 0;
+    background-color: #E1E1E1;
 }
 
 .header {
@@ -52,5 +53,98 @@ body {
     color: #ffffff;
 }
 
+/* 外枠の div */
+.attendance-center-wrapper {
+    padding-top: 120px;
+    text-align: center;
+}
+
+/* 勤務状態：長丸アイコン*/
+.current-status {
+    font-size: 20px;
+    color: #696969;
+    display: inline-block;
+    background-color: #C8C8C8;
+    padding: 8px 20px;
+    border-radius: 50px;
+    margin-bottom: 40px;
+}
+
+/* 「xxxx年xx月xx日」 */
+.current-date {
+    font-weight: 400;
+    font-size: 45px;
+    padding-bottom: 20px;
+}
+
+/* 現在時刻 */
+.current-time-clock {
+    font-weight: 900;
+    font-size: 80px;
+}
+
+/* 打刻ボタン用 div（ボタンが１つのとき） */
+.single-button-wrapper {
+}
+
+/* 打刻ボタン用 div（ボタンが２つのとき） */
+.double-button-wrapper {
+    width: 440px;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+}
+
+.status-message {
+    font-size: 26px;
+    margin-top: 55px;
+}
+
+/* ボタン「出勤」「退勤」 */
+.action-button {
+    width: 160px;
+    color: #ffffff;
+    background-color: #000000;
+    font-size: 24px;
+    font-weight: 400;
+    margin-top: 55px;
+    border: none;
+    padding: 20px 0;
+    border-radius: 16px;
+}
+
+/* ボタン「休憩入」「休憩戻」 */
+.break-button {
+    color: #000000;
+    background-color: #ffffff;
+    font-size: 24px;
+    font-weight: 600;
+    margin-top: 55px;
+    border: none;
+    padding: 20px 40px;
+    border-radius: 16px;
+}
+
+
 /* タブレット（768-850px）向けのスタイル */
-@media screen and (max-width: 850px) {}
+@media screen and (max-width: 850px) {
+    .header_inner {
+            display: flex;
+            height: 70px;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+
+        /*ヘッダー右側のnavスペース*/
+        .header__nav {
+            width: 400px;
+            font-size: 16px;
+        }
+
+        /*ログアウトbutton*/
+        .header__logout-button {
+            width: 100px;
+            font-size: 16px;
+            margin-right: 0;
+        }
+}

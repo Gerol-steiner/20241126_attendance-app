@@ -1,6 +1,11 @@
 body {
     font-weight: 600;
     margin: 0;
+    background-color: #E1E1E1;
+}
+
+main {
+    padding-top: 30px;
 }
 
 .header {
@@ -10,7 +15,6 @@ body {
 .header_inner {
     display: flex;
     height: 70px;
-    /*ヘッダーの高さ*/
     align-items: center;
     justify-content: space-between;
     margin-left: 30px;
@@ -52,11 +56,6 @@ body {
     color: #ffffff;
 }
 
-/* <body>タグ */
-body {
-    background-color: #E1E1E1;
-}
-
 /* 一番外の div  */
 .attendance-wrapper {
     width: 65%;
@@ -70,25 +69,25 @@ body {
 .attendance-wrapper h1 {
     text-align: left;
     width: 100%;
-    border-left: solid 8px #000000;
-    padding-left: 20px;
+    border-left: solid 9px #000000;
+    padding-left: 14px;
 }
 
 /*カレンダーナビケーション div*/
-.date-navigation {
+.month-navigation {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
     padding: 20px;
+    margin-top: 20px;
     background-color: #ffffff;
-    margin-top: 40px;
     margin-bottom: 30px;
     border-radius: 10px;
 }
 
 /*カレンダーナビケーション 「＜－前月」「翌月ー＞」*/
-.date-link {
+.month-link {
     display: inline-flex;
     align-items: center;
     text-decoration: none;
@@ -97,7 +96,7 @@ body {
 }
 
 /*カレンダーナビケーション div「<-先月、翌月->」:ホバー時*/
-.date-link:hover {
+.month-link:hover {
     text-decoration: underline;
 }
 
@@ -111,21 +110,21 @@ body {
 }
 
 /*カレンダーナビケーション div「年/月」*/
-.date-navigation span {
+.month-navigation span {
     color: #000000;
     font-size: 20px;
     text-decoration: none;
 }
 
 /*カレンダーナビケーション div「<-先月、翌月->」*/
-.date-navigation a {
+.month-navigation a {
     color: #737373;
     font-size: 20px;
     text-decoration: none;
 }
 
 /* 「カレンダーアイコンと現在の月」 */
-.date-display {
+.month-display {
     font: 14px;
     display: flex;
     align-items: center;
@@ -137,13 +136,6 @@ body {
     width: 28x;
     height: 28px;
     transform: translateY(-1px);
-}
-
-/* 「翌日－＞」リンクが非表示時にレイアウトを保つため */
-.day-link.next-day {
-    width: 100px;
-    display: flex;
-    justify-content: flex-end;
 }
 
 /* テーブル全体のスタイリング */

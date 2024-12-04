@@ -183,8 +183,7 @@ class AttendanceController extends Controller
                             ->diffInMinutes(Carbon::parse($breaktime->break_end));
                     }
                 }
-                // 休憩時間が存在する場合のみフォーマット
-                // 休憩時間をフォーマット
+                // 休憩時間が存在する場合のみ休憩時間をフォーマット
                 if ($breakMinutes !== null) { // 計算結果がある場合のみフォーマット
                     $hours = floor($breakMinutes / 60);
                     $minutes = $breakMinutes % 60;
@@ -252,11 +251,22 @@ class AttendanceController extends Controller
                 : null;
         }
 
-        // dateをCarbonインスタンスに変換
-        $attendance->date = Carbon::parse($attendance->date);
+        // breaktimesが空の場合、ビュー表示用にダミーデータを追加
+        if ($attendance->breaktimes->isEmpty()) {
+            $attendance->breaktimes = collect([
+                (object)[
+                    'id' => null, // 新規作成用
+                    'break_start' => null,
+                    'break_end' => null,
+                ]
+            ]);
+        }
 
-        return view('attendance.detail', compact('attendance', 'user'));
-    }
+            // dateをCarbonインスタンスに変換
+            $attendance->date = Carbon::parse($attendance->date);
+
+            return view('attendance.detail', compact('attendance', 'user'));
+        }
 
     // 勤怠の「修正申請」
     public function update(Request $request, $id)

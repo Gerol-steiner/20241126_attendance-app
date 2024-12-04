@@ -14,14 +14,14 @@
 <body>
     <header class="header">
         <div class="header_inner">
-            <a class="header__logo" href="/attendance">
+            <a class="header__logo" href="/admin/attendance/list">
                 <img src="{{ asset('images/logo.svg') }}" alt="COACHTECH ロゴ" class="logo-image">
             </a>
             <nav class="header__nav">
-                <a class="header__link" href="/attendance">勤怠</a>
-                <a class="header__link" href="/attendance/list">勤怠一覧</a>
-                <a class="header__link" href="/stamp_correction_request/list" role="button">申請一覧</a>
-                <form action="{{ route('logout') }}" method="POST" class="header__logout-form">
+                <a class="header__link" href="/admin/attendance/list">勤怠一覧</a>
+                <a class="header__link" href="/admin/staff/list">スタッフ一覧</a>
+                <a class="header__link" href="/stamp_correction_request/list" role="button">未実装</a>
+                <form action="{{ route('admin.logout') }}" method="POST" class="header__logout-form">
                     @csrf
                     <button type="submit" class="header__logout-button">ログアウト</button>
                 </form>

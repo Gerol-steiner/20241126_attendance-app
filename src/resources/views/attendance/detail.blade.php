@@ -18,20 +18,38 @@
 <body>
     <header class="header">
         <div class="header_inner">
-            <a class="header__logo" href="/attendance">
-                <img src="{{ asset('images/logo.svg') }}" alt="COACHTECH ロゴ" class="logo-image">
-            </a>
-            <nav class="header__nav">
-                <a class="header__link" href="/attendance">勤怠</a>
-                <a class="header__link" href="/attendance/list">勤怠一覧</a>
-                <a class="header__link" href="/stamp_correction_request/list" role="button">申請一覧</a>
-                <form action="{{ route('logout') }}" method="POST" class="header__logout-form">
-                    @csrf
-                    <button type="submit" class="header__logout-button">ログアウト</button>
-                </form>
-            </nav>
+            @if (Auth::user() && Auth::user()->is_admin)
+                <!-- 管理者用ヘッダー -->
+                <a class="header__logo" href="/admin/attendance/list">
+                    <img src="{{ asset('images/logo.svg') }}" alt="COACHTECH ロゴ" class="logo-image">
+                </a>
+                <nav class="header__nav">
+                    <a class="header__link" href="/admin/attendance/list">勤怠一覧</a>
+                    <a class="header__link" href="/admin/staff/list">スタッフ一覧</a>
+                    <a class="header__link" href="/stamp_correction_request/list" role="button">未実装</a>
+                    <form action="{{ route('admin.logout') }}" method="POST" class="header__logout-form">
+                        @csrf
+                        <button type="submit" class="header__logout-button">ログアウト</button>
+                    </form>
+                </nav>
+            @else
+                <!-- 一般ユーザー用ヘッダー -->
+                <a class="header__logo" href="/attendance">
+                    <img src="{{ asset('images/logo.svg') }}" alt="COACHTECH ロゴ" class="logo-image">
+                </a>
+                <nav class="header__nav">
+                    <a class="header__link" href="/attendance">勤怠</a>
+                    <a class="header__link" href="/attendance/list">勤怠一覧</a>
+                    <a class="header__link" href="/stamp_correction_request/list" role="button">申請一覧</a>
+                    <form action="{{ route('logout') }}" method="POST" class="header__logout-form">
+                        @csrf
+                        <button type="submit" class="header__logout-button">ログアウト</button>
+                    </form>
+                </nav>
+            @endif
         </div>
     </header>
+
 
     <main>
     <!--開発用-->
@@ -71,13 +89,13 @@
                     <tr>
                         <td class="col-1">出勤・退勤</td>
                         <td class="col-2">
-                            <input type="time" id="check_in" name="check_in" value="{{ $attendance->check_in }}" class="time-input" >
+                            <input type="time" id="check_in" name="check_in" value="{{ $attendance->check_in ?? '' }}" class="time-input">
                         </td>
                         <td class="col-3">
                             <span class="separator">～</span>
                         </td>
                         <td class="col-4">
-                            <input type="time" id="check_out" name="check_out" value="{{ $attendance->check_out }}" class="time-input">
+                            <input type="time" id="check_out" name="check_out" value="{{ $attendance->check_out ?? '' }}" class="time-input">
                         </td>
                         <td class="col-5"></td> <!-- 空白の列 -->
                     </tr>
@@ -86,7 +104,7 @@
                         <tr>
                             <td class="col-1">休憩{{ $index + 1 }}</td>
                             <td class="col-2">
-                                <input type="time" name="breaktimes[{{ $breaktime->id }}][start]" value="{{ $breaktime->break_start }}" placeholder="休憩開始" class="time-input">
+                                <input type="time" name="breaktimes[{{ $breaktime->id }}][start]" value="{{ $breaktime->break_start ?? '' }}" placeholder="休憩開始" class="time-input">
                             </td>
                             <td class="col-3">
                                 <span class="separator">～</span>
@@ -166,7 +184,7 @@
 
                 // ポップアップの位置を調整
                 const rect = yearInput.getBoundingClientRect();
-                popup.style.top = rect.bottom + 135 + 'px';
+                popup.style.top = rect.bottom + 6 + 'px';
                 popup.style.left = rect.left + 32 + 'px';
             });
         })
