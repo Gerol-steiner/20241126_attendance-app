@@ -9,6 +9,7 @@ use App\Models\StatusChange; // 追加
 use App\Models\Status; // 追加
 use App\Models\BreakTime; // 追加
 use Carbon\Carbon; // 追加
+use App\Models\AttendanceModification; // 追加
 
 
 class AttendanceController extends Controller
@@ -304,4 +305,24 @@ class AttendanceController extends Controller
         // 成功時にリダイレクト
         return redirect()->route('attendance.index')->with('success', '修正申請が完了しました。');
     }
+
+    // 「申請一覧」の表示
+    public function listRequests(Request $request)
+    {
+        $tab = $request->input('tab', 'pending'); // 値が提供されていない場合、デフォルトでpending（承認待ち）とする
+        $currentTab = $tab;
+
+        // 条件に応じてデータを取得
+        $requests = AttendanceModification::with(['attendance.user'])
+            ->when($tab === 'pending', function ($query) {
+                $query->whereNull('approved_by'); // 承認待ち
+            })
+            ->when($tab === 'approved', function ($query) {
+                $query->whereNotNull('approved_by'); // 承認済み
+            })
+            ->get();
+
+        return view('attendance.request_list', compact('requests', 'currentTab'));
+    }
+
 }

@@ -62,7 +62,7 @@
     <div class="attendance-wrapper">
         <h1>勤怠詳細</h1>
 
-            <form action="{{ route('attendance.update', $attendance->id) }}" method="POST" class="attendance-form">
+            <form action="{{ route('attendance.update', ['user_id' => $user->id]) }}" method="POST" class="attendance-form">
                 @csrf
                 <table class="attendance-detail-table">
                     <!-- 1行目 -->

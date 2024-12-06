@@ -7,6 +7,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminAttendanceController;
 use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\AttendanceModificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,5 +64,10 @@ Route::post('/attendance/check-out', [AttendanceController::class, 'checkOut'])-
 Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendance.list');
 // 「勤怠詳細画面」
 Route::get('/attendance/{id}', [AttendanceController::class, 'detail'])->name('attendance.detail');
-// 勤怠修正申請を処理するルート
-Route::post('/attendance/{id}/update', [AttendanceController::class, 'update'])->name('attendance.update');
+
+
+// 勤怠修正申請を登録
+Route::post('/attendance/update/{user_id}', [AttendanceModificationController::class, 'update'])->name('attendance.update');
+
+// 「申請一覧」の表示
+Route::get('/stamp_correction_request/list', [AttendanceController::class, 'listRequests'])->name('admin.requests');
