@@ -36,6 +36,14 @@ Route::get('/admin/staff/list', [StaffController::class, 'index'])->name('admin.
 // 【管理者】勤怠一覧（月次）
 Route::get('/admin/attendance/staff/{id}', [AdminAttendanceController::class, 'monthlyList'])->name('admin.attendance.staff.monthly_list');
 
+// 【管理者】修正申請の承認画面
+Route::get('/stamp_correction_request/approve/{attendance_correct_request}', [AttendanceModificationController::class, 'showApprovalForm'])
+    ->name('attendance_modification.approve');
+
+// 【管理者】修正申請の承認処理
+Route::post('/stamp_correction_request/approve/{attendance_correct_request}', [AttendanceModificationController::class, 'approveModification'])
+    ->name('attendance_modification.approve_request');
+
 
 // ユーザー登録ルート
 Route::post('/register', [RegisterController::class, 'register'])->name('register');

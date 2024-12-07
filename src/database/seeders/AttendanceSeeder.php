@@ -27,7 +27,7 @@ class AttendanceSeeder extends Seeder
 
         // ダミーデータを生成する日付範囲を設定
         $startDate = Carbon::now()->subDays(50); // 開始日
-        $endDate = Carbon::yesterday();  // 終了日
+        $endDate = Carbon::now()->subDays(3);  // 終了日
 
         // 各ユーザーごとにデータを生成
         foreach ($users as $user) {

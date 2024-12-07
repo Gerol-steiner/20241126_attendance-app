@@ -1,0 +1,202 @@
+body {
+    font-weight: 600;
+    margin: 0;
+}
+
+.header {
+    background-color: #000000;
+}
+
+.header_inner {
+    display: flex;
+    height: 70px;
+    /*ヘッダーの高さ*/
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 30px;
+    margin-right: 20px;
+}
+
+.header__logo {
+    display: block;
+    /* インラインからブロック要素に変更 */
+    padding: 15px;
+}
+
+/*ヘッダー右側のnavスペース*/
+.header__nav {
+    width: 470px;
+    height: 100%;
+    font-size: 18px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    text-decoration: none;
+}
+
+.header__link {
+    width: 120px;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+}
+
+/*ログアウトbutton*/
+.header__logout-button {
+    font-weight: 600;
+    width: 120px;
+    font-size: 18px;
+    border: none;
+    margin-right: 20px;
+    background-color: #000000;
+    color: #ffffff;
+}
+
+body {
+    background-color: #E1E1E1;
+}
+
+/* <main>タグ */
+main {
+    padding-top: 50px;
+    padding-bottom: 70px;
+}
+
+/* 一番外の div  */
+.attendance-wrapper {
+    width: 50%;
+    margin: 0 auto;
+}
+
+/* タイトル 「勤怠詳細」*/
+.attendance-wrapper h1 {
+    text-align: left;
+    width: 100%;
+    border-left: solid 6px #000000;
+    padding-left: 14px;
+    margin-top: 20px;
+}
+
+/* form タグ */
+.attendance-form {
+    width: 100%;
+}
+
+/* テーブル全体のスタイリング */
+.attendance-detail-table {
+    color: #737373;
+    width: 100%;
+    margin: 20px 0;
+    font-size: 17px;
+    background-color: #ffffff;
+    border: solid 1px #E1E1E1;
+    margin-top: 50px;
+    /* 「border-radius」のために以下２行が必要 */
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* テーブルボディ */
+.attendance-detail-table td {
+    color: #737373;
+    padding: 23px;
+    background-color: #ffffff;
+    border-bottom: 2px solid #E1E1E1;
+    text-align: left;
+}
+
+/* テーブル内の span タグ「名前」「～」 */
+.attendance-detail-table span {
+    color: rgb(0, 0, 0);
+}
+
+/* テーブル「１列目の幅」 */
+.attendance-detail-table .col-1 {
+    width: 32%;
+    padding-left: 80px;
+}
+
+/* テーブル「２列目の幅」 */
+.attendance-detail-table .col-2 {
+    width: 20%;
+}
+
+/* テーブル「３列目の幅」 */
+.attendance-detail-table .col-3 {
+    width: 15%;
+}
+
+/* テーブル「４列目の幅」 */
+.attendance-detail-table .col-4 {
+    width: 20%;
+}
+
+/* 「承認」ボタン：コンテナ */
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 70px;
+}
+
+/* 「承認」ボタン */
+.btn-approve {
+    background-color: black;
+    color: white;
+    width: 120px;
+    height: 40px;
+    border: none;
+    font-size: 18px;
+    font-weight: 400;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* 「承認済み」ボタン */
+.btn-approved {
+    background-color: #696969;
+    color: white;
+    width: 120px;
+    height: 40px;
+    border: none;
+    font-size: 18px;
+    font-weight: 400;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+
+/* タブレット（768-850px）向けのスタイル */
+@media screen and (max-width: 850px) {
+    .header_inner {
+        display: flex;
+        height: 70px;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    /*ヘッダー右側のnavスペース*/
+    .header__nav {
+        width: 400px;
+        font-size: 16px;
+    }
+
+    /*ログアウトbutton*/
+    .header__logout-button {
+        width: 100px;
+        font-size: 16px;
+    }
+
+    /* 一番外の div  */
+    .attendance-wrapper {
+        width: 87%;
+    }
+
+    /* テーブル「１列目の幅」 */
+    .attendance-detail-table .col-1 {
+        width: 28%;
+        padding-left: 40px;
+    }
+}

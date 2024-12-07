@@ -269,43 +269,6 @@ class AttendanceController extends Controller
             return view('attendance.detail', compact('attendance', 'user'));
         }
 
-    // 勤怠の「修正申請」
-    public function update(Request $request, $id)
-    {
-        // POSTデータを取得
-        $dateYear = $request->input('date_year');
-        $dateMonthDay = $request->input('date_month_day');
-        $checkIn = $request->input('check_in');
-        $checkOut = $request->input('check_out');
-        $breakStart = $request->input('break_start');
-        $breakEnd = $request->input('break_end');
-        $remarks = $request->input('remarks');
-
-        // 日付を「Y-m-d」の形式に加工
-        $date = Carbon::createFromFormat('Y年m月d日', $dateYear . $dateMonthDay)->format('Y-m-d');
-
-        // 該当するattendanceレコードを取得
-        $attendance = Attendance::where('date', $date)->first();
-
-        if (!$attendance) {
-            return redirect()->route('attendance.index')->with('error', '該当する勤怠レコードが存在しません。');
-        }
-
-        // attendance_modificationsテーブルに新しいレコードを作成
-        $modification = new AttendanceModification();
-        $modification->attendance_id = $attendance->id;
-        $modification->date = $date;
-        $modification->check_in = $checkIn;
-        $modification->check_out = $checkOut;
-        $modification->break_start = $breakStart;
-        $modification->break_end = $breakEnd;
-        $modification->remarks = $remarks;
-        $modification->save();
-
-        // 成功時にリダイレクト
-        return redirect()->route('attendance.index')->with('success', '修正申請が完了しました。');
-    }
-
     // 「申請一覧」の表示
     public function listRequests(Request $request)
     {

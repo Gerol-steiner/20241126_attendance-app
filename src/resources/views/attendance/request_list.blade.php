@@ -73,16 +73,16 @@
                             <!-- 状態 -->
                             <td>{{ $request->approved_by ? '承認済み' : '承認待ち' }}</td>
                             <!-- 名前 -->
-                            <td>{{ $request->attendance->user->name }}</td>
+                            <td>{{ $request->staff ? $request->staff->name : 'ユーザー情報なし' }}</td>
                             <!-- 対象日時 -->
-                            <td>{{ Carbon\Carbon::parse($request->attendance->date)->format('Y/m/d') }}</td>
+                            <td>{{ Carbon\Carbon::parse($request->date)->format('Y/m/d') }}</td>
                             <!-- 申請理由 -->
                             <td>{{ $request->remark }}</td>
                             <!-- 申請日時 -->
                             <td>{{ $request->created_at->format('Y/m/d') }}</td>
                             <!-- 詳細 -->
                             <td>
-                                <a href="{{ route('attendance.detail', $request->attendance->id) }}">詳細</a>
+                                <a href="{{ route('attendance_modification.approve', ['attendance_correct_request' => $request->id]) }}">詳細</a>
                             </td>
                         </tr>
                     @endforeach

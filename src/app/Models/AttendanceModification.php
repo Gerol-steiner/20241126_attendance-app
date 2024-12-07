@@ -18,11 +18,13 @@ class AttendanceModification extends Model
      * 一括代入可能な属性
      */
     protected $fillable = [
-        'user_id',
         'attendance_id',
+        'staff_id',
+        'requested_by',
         'check_in',
         'check_out',
         'remark',
+        'date',
         'approved_by',
     ];
 
@@ -56,6 +58,11 @@ class AttendanceModification extends Model
     public function approvedBy()
     {
         return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function staff()
+    {
+        return $this->belongsTo(User::class, 'staff_id');
     }
 }
 

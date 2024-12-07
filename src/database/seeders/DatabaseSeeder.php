@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
         DB::table('statuses')->truncate();
         DB::table('status_changes')->truncate();
         DB::table('break_times')->truncate();
+        DB::table('attendance_modifications')->truncate();
+        DB::table('break_time_modifications')->truncate();
 
         // 外部キー制約を有効化
         Schema::enableForeignKeyConstraints();
