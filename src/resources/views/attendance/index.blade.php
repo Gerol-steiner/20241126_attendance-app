@@ -16,7 +16,7 @@
             function updateClock() {
                 const now = new Date(); // 現在の日時を取得
                 const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' }; // 日付フォーマットの設定
-                const formattedDate = now.toLocaleDateString('ja-JP', options).replace(/日/g, ''); // 日本語形式の日付
+                const formattedDate = now.toLocaleDateString('ja-JP', options); // 日本語形式の日付
                 const formattedTime = now.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }); // 時刻のフォーマット（時:分）
 
                 // 日付を更新（HTML要素#current-dateに代入）

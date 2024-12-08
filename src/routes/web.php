@@ -45,6 +45,13 @@ Route::post('/stamp_correction_request/approve/{attendance_correct_request}', [A
     ->name('attendance_modification.approve_request');
 
 
+
+// 「申請一覧」の表示
+Route::get('/stamp_correction_request/list', [AttendanceController::class, 'listRequests'])->name('admin.requests');
+
+
+
+
 // ユーザー登録ルート
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
 
@@ -77,5 +84,4 @@ Route::get('/attendance/{id}', [AttendanceController::class, 'detail'])->name('a
 // 勤怠修正申請を登録
 Route::post('/attendance/update/{user_id}', [AttendanceModificationController::class, 'update'])->name('attendance.update');
 
-// 「申請一覧」の表示
-Route::get('/stamp_correction_request/list', [AttendanceController::class, 'listRequests'])->name('admin.requests');
+

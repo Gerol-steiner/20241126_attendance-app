@@ -24,13 +24,21 @@ class AttendanceModificationController extends Controller
             return redirect()->back()->with('error', '日付形式が無効です。');
         }
 
-        // 1. 修正対象の勤怠レコードを取得（なければnull）
+        // ログイン中のユーザーが管理者かどうかを判定
+        $isAdmin = Auth::user()->is_admin;
+
+        // １．修正対象の勤怠レコードを取得または作成
         $attendance = Attendance::where('user_id', $user_id)
             ->where('date', $date)
             ->first();
 
-        // ログイン中のユーザーが管理者かどうかを判定
-        $isAdmin = Auth::user()->is_admin;
+        if ($isAdmin && !$attendance) {
+            // 管理者ユーザーの場合、該当するattendanceレコードがなければ作成
+            $attendance = Attendance::create([
+                'user_id' => $user_id,
+                'date' => $date,
+            ]);
+        }
 
         // 2. AttendanceModificationレコードを作成
         $attendanceModification = AttendanceModification::create([
@@ -58,9 +66,35 @@ class AttendanceModificationController extends Controller
             }
         }
 
-        // 4. リダイレクト
-        return redirect()->route('admin.attendance.daily_list')
-            ->with('success', '勤怠修正が登録されました。');
+        // ４．管理者ユーザーの場合、attendanceレコードを更新
+        if ($isAdmin) {
+            // 出勤・退勤時刻を更新
+            $attendance->update([
+                'check_in' => $attendanceModification->check_in,
+                'check_out' => $attendanceModification->check_out,
+            ]);
+
+            // 紐づくbreak_timeレコードを削除
+            $attendance->breakTimes()->delete();
+
+            // break_time_modificationレコードを基にbreak_timeレコードを作成
+            foreach ($attendanceModification->breakTimeModifications as $breaktimeModification) {
+                $attendance->breakTimes()->create([
+                    'attendance_id' => $attendance->id,
+                    'break_start' => $breaktimeModification->break_start,
+                    'break_end' => $breaktimeModification->break_end,
+                ]);
+            }
+        }
+
+        // フラッシュメッセージとリダイレクト先の設定
+        if ($isAdmin) {
+            return redirect()->route('admin.attendance.daily_list')
+                ->with('success', '勤怠修正が完了しました。');
+        } else {
+            return redirect()->route('attendance.list')
+                ->with('success', '勤怠修正のリクエストが申請されました');
+        }
     }
 
     // 修正申請の承認画面の表示
@@ -88,12 +122,60 @@ class AttendanceModificationController extends Controller
         }
 
         // 修正申請レコードを取得
-        $modificationRequest = AttendanceModification::findOrFail($attendance_correct_request);
+        $modificationRequest = AttendanceModification::with('breakTimeModifications')->findOrFail($attendance_correct_request);
 
         // 承認処理（approved_by に現在のユーザーIDを格納）
         $modificationRequest->update([
             'approved_by' => auth()->id(),
         ]);
+
+        // attendance_idの確認
+        if ($modificationRequest->attendance_id) {
+            // １．attendance_idに値がある場合
+            $attendance = Attendance::findOrFail($modificationRequest->attendance_id);
+
+            // 出勤・退勤時刻を上書き
+            $attendance->update([
+                'check_in' => $modificationRequest->check_in,
+                'check_out' => $modificationRequest->check_out,
+            ]);
+
+            // 紐づくbreak_timeレコードを削除
+            $attendance->breakTimes()->delete();
+
+            // break_time_modificationレコードをもとにbreak_timeレコードを作成
+            foreach ($modificationRequest->breakTimeModifications as $breaktimeModification) {
+                $attendance->breakTimes()->create([
+                    'attendance_id' => $attendance->id,
+                    'break_start' => $breaktimeModification->break_start,
+                    'break_end' => $breaktimeModification->break_end,
+                ]);
+            }
+        } else {
+            // ２． attendance_idがnullの場合（新しいattendanceレコードを作成）
+            $attendance = Attendance::create([
+                'user_id' => $modificationRequest->staff_id,
+                'date' => $modificationRequest->date,
+                'check_in' => $modificationRequest->check_in,
+                'check_out' => $modificationRequest->check_out,
+            ]);
+
+            // break_time_modificationレコードをもとにbreak_timeレコードを作成
+            foreach ($modificationRequest->breakTimeModifications as $breaktimeModification) {
+                $attendance->breakTimes()->create([
+                    'attendance_id' => $attendance->id,
+                    'break_start' => $breaktimeModification->break_start,
+                    'break_end' => $breaktimeModification->break_end,
+                ]);
+            }
+
+            // 修正申請レコードに新しく作成したattendanceレコードのIDを格納
+            $modificationRequest->update([
+                'attendance_id' => $attendance->id,
+            ]);
+        }
+
+
 
         // 承認済み後、同じページを再表示
         return redirect()->route('attendance_modification.approve', ['attendance_correct_request' => $attendance_correct_request])

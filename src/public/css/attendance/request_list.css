@@ -67,7 +67,7 @@ main {
 
 /* 一番外の div  */
 .request-wrapper {
-    width: 60%;
+    width: 85%;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -139,15 +139,45 @@ main {
 /* テーブルボディ */
 .request-table tbody td {
     color: #737373;
-    padding: 10px;
+    padding: 17px 0;
     background-color: #ffffff;
     border-bottom: 2px solid #E1E1E1;
 }
 
-/* テーブルの「詳細」列に padding-right を設定 */
+/* 1列目（状態） */
+.request-table td:nth-child(1),
+.request-table th:nth-child(1) {
+    width: 12%;
+}
+
+/* 2列目（名前） */
+.request-table td:nth-child(2),
+.request-table th:nth-child(2) {
+    width: 12%;
+}
+
+/* 3列目（対象日時） */
+.request-table td:nth-child(3),
+.request-table th:nth-child(3) {
+    width: 12%;
+}
+
+/* 4列目（申請理由） */
+.request-table td:nth-child(4),
+.request-table th:nth-child(4) {
+
+}
+
+/* 5列目（申請日時） */
+.request-table td:nth-child(5),
+.request-table th:nth-child(5) {
+    width: 12%;
+}
+
+/* 6列目（詳細） */
 .request-table td:last-child,
 .request-table th:last-child {
-    padding-right: 35px;
+    width: 12%;
 }
 
 /* 詳細リンク */
@@ -163,6 +193,10 @@ main {
 
 /* タブレット（768-850px）向けのスタイル */
 @media screen and (max-width: 850px) {
+    body {
+        font-size: 12px;
+    }
+
     .header_inner {
         display: flex;
         height: 70px;
@@ -185,6 +219,55 @@ main {
 
     /* 一番外の div  */
     .request-wrapper {
-        width: 87%;
+        width: 94%;
+    }
+
+    /* 「承認待ち」「承認済み」のリンク */
+    .filter-link {
+        font-size: 16px;
+    }
+
+    /* テーブル全体のスタイリング */
+    .request-table {
+        font-size: 12px;
+    }
+
+    /* テーブルヘッダー */
+    .request-table thead th {
+        font-size: 14px;
+    }
+
+    /* 1列目（状態） */
+    .request-table td:nth-child(1),
+    .request-table th:nth-child(1) {
+        width: 14%;
+    }
+
+    /* 2列目（名前） */
+    .request-table td:nth-child(2),
+    .request-table th:nth-child(2) {
+        width: 14%;
+    }
+
+    /* 3列目（対象日時） */
+    .request-table td:nth-child(3),
+    .request-table th:nth-child(3) {
+        width: 14%;
+    }
+
+    /* 4列目（申請理由） */
+    .request-table td:nth-child(4),
+    .request-table th:nth-child(4) {}
+
+    /* 5列目（申請日時） */
+    .request-table td:nth-child(5),
+    .request-table th:nth-child(5) {
+        width: 14%;
+    }
+
+    /* 6列目（詳細） */
+    .request-table td:last-child,
+    .request-table th:last-child {
+        width: 14%;
     }
 }

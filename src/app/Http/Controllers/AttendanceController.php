@@ -272,6 +272,11 @@ class AttendanceController extends Controller
     // 「申請一覧」の表示
     public function listRequests(Request $request)
     {
+                // ログインしていなければログインページにリダイレクト
+        if (!auth()->check()) {
+            return redirect()->route('admin.login');
+        }
+
         $tab = $request->input('tab', 'pending'); // 値が提供されていない場合、デフォルトでpending（承認待ち）とする
         $currentTab = $tab;
 
