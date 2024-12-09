@@ -167,6 +167,13 @@ main {
 
 }
 
+/* 一般ユーザー向け「承認待ち」メッセージ */
+.pending-message {
+    color: red;
+    font-size: 17px;
+    font-weight: 400;
+    margin-top: -50px;
+}
 
 /* タブレット（768-850px）向けのスタイル */
 @media screen and (max-width: 850px) {

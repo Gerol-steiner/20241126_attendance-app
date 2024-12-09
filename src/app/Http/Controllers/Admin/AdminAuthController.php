@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Http\Requests\AdminLoginRequest;
 
 class AdminAuthController extends Controller
 {
@@ -23,7 +24,7 @@ class AdminAuthController extends Controller
     }
 
     // ログイン処理
-    public function login(Request $request)
+    public function login(AdminLoginRequest $request)
     {
         // ユーザーを検索
         $user = User::where('email', $request->email)->first();

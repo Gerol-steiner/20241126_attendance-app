@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminAttendanceController;
@@ -37,6 +38,7 @@ Route::get('/admin/staff/list', [StaffController::class, 'index'])->name('admin.
 Route::get('/admin/attendance/staff/{id}', [AdminAttendanceController::class, 'monthlyList'])->name('admin.attendance.staff.monthly_list');
 
 // 【管理者】修正申請の承認画面
+// 【一般ユーザー】修正申請の承認待ち画面
 Route::get('/stamp_correction_request/approve/{attendance_correct_request}', [AttendanceModificationController::class, 'showApprovalForm'])
     ->name('attendance_modification.approve');
 
@@ -63,6 +65,9 @@ Route::get('/register/pending', function () {return view('auth.registration_pend
 Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'temporaryLoginAndVerify'])
     ->middleware(['signed'])  // 署名付きURLでの確認を行う
     ->name('verification.verify'); // 「VerifyEmail.php」でデフォルト定義されいるので変更しないこと
+
+// ログイン（一般ユーザー）
+Route::post('/login', [LoginController::class, 'login'])->name('login');
 
 
 // 「勤怠画面」

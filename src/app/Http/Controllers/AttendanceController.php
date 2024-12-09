@@ -168,56 +168,69 @@ class AttendanceController extends Controller
             ->get()
             ->keyBy('date');
 
+        // 勤怠修正申請を取得
+        $modifications = AttendanceModification::whereIn('attendance_id', $attendances->pluck('id'))
+            ->with('attendance')
+            ->get()
+            ->groupBy('attendance_id');
+
         // データを加工してビューに渡す
         $data = [];
         foreach ($dates as $date) {
             $attendance = $attendances->get($date->format('Y-m-d'));
+            $latestModification = null;
+
+            if ($attendance && isset($modifications[$attendance->id])) {
+                $latestModification = $modifications[$attendance->id]->sortByDesc('created_at')->first();
+            }
+
             $breakTime = null;
-            $breakMinutes = null;
+            $totalTime = null;
 
             if ($attendance) {
-                // 休憩時間の計算（breaktimes テーブルから集計）
+                // 休憩時間の計算
+                $breakMinutes = 0;
                 foreach ($attendance->breaktimes as $breaktime) {
-                    // 各カラムが両方とも「nullでない」とき
-                    if (!empty($breaktime->break_start) && !empty($breaktime->break_end)) {
+                    if ($breaktime->break_start && $breaktime->break_end) {
                         $breakMinutes += Carbon::parse($breaktime->break_start)
                             ->diffInMinutes(Carbon::parse($breaktime->break_end));
                     }
                 }
-                // 休憩時間が存在する場合のみ休憩時間をフォーマット
-                if ($breakMinutes !== null) { // 計算結果がある場合のみフォーマット
+                if ($breakMinutes > 0) {
                     $hours = floor($breakMinutes / 60);
                     $minutes = $breakMinutes % 60;
-                    $breakTime = sprintf('%d:%02d', $hours, $minutes); // "1:30" の形式
+                    $breakTime = sprintf('%d:%02d', $hours, $minutes);
                 }
-            }
 
-            $totalTime = null;
-            if ($attendance && $attendance->check_in && $attendance->check_out) {
-                $totalMinutes = Carbon::parse($attendance->check_in)->diffInMinutes(Carbon::parse($attendance->check_out));
-                $totalMinutes -= $breakMinutes; // 休憩時間を引く
-                $hours = floor($totalMinutes / 60);
-                $minutes = $totalMinutes % 60;
-                $totalTime = sprintf('%d:%02d', $hours, $minutes); // "8:30" の形式にフォーマット
+                // 合計勤務時間の計算
+                if ($attendance->check_in && $attendance->check_out) {
+                    $totalMinutes = Carbon::parse($attendance->check_in)
+                        ->diffInMinutes(Carbon::parse($attendance->check_out));
+
+                    $totalMinutes -= $breakMinutes;
+                    $hours = floor($totalMinutes / 60);
+                    $minutes = $totalMinutes % 60;
+                    $totalTime = sprintf('%d:%02d', $hours, $minutes);
+                }
             }
 
             $data[] = [
                 'date' => $date->format('m/d'),
                 'day' => $date->format('D'),
                 'attendance' => $attendance,
+                'latestModification' => $latestModification,
                 'breakTime' => $breakTime,
                 'totalTime' => $totalTime,
             ];
         }
 
-        return view('attendance.list', [
-            'currentMonth' => $startDate,
-            'dates' => $dates,
-            'attendances' => $attendances,
-            'data' => $data,
-        ]);
-    }
 
+    return view('attendance.list', [
+        'currentMonth' => $startDate,
+        'data' => $data,
+    ]);
+
+}
     // 「勤怠詳細」画面の表示
     public function detail($id)
     {
@@ -277,16 +290,33 @@ class AttendanceController extends Controller
             return redirect()->route('admin.login');
         }
 
-        $tab = $request->input('tab', 'pending'); // 値が提供されていない場合、デフォルトでpending（承認待ち）とする
+        // ログイン中のユーザーを取得
+        $user = auth()->user();
+
+        // 値が提供されていない場合、デフォルトでpending（承認待ち）とする
+        $tab = $request->input('tab', 'pending');
         $currentTab = $tab;
 
         // 条件に応じてデータを取得
-        $requests = AttendanceModification::with(['attendance.user'])
-            ->when($tab === 'pending', function ($query) {
-                $query->whereNull('approved_by'); // 承認待ち
-            })
-            ->when($tab === 'approved', function ($query) {
-                $query->whereNotNull('approved_by'); // 承認済み
+        // 管理者と一般ユーザーで異なる条件を設定
+        $requests = AttendanceModification::with(['attendance.user']) // attendanceおよびattendanceに紐づいたuserも取得
+            ->when($user->is_admin, function ($query) use ($tab) {
+                // 管理者の場合
+                $query->when($tab === 'pending', function ($query) {
+                    $query->whereNull('approved_by'); // 承認待ち
+                })
+                ->when($tab === 'approved', function ($query) {
+                    $query->whereNotNull('approved_by'); // 承認済み
+                });
+            }, function ($query) use ($tab, $user) {
+                // 一般ユーザーの場合
+                $query->where('staff_id', $user->id) // 自分の勤怠データのみ
+                    ->when($tab === 'pending', function ($query) {
+                        $query->whereNull('approved_by'); // 承認待ち
+                    })
+                    ->when($tab === 'approved', function ($query) {
+                        $query->whereNotNull('approved_by'); // 承認済み
+                    });
             })
             ->get();
 

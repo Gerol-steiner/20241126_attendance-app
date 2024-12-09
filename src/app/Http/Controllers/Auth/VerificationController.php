@@ -24,11 +24,11 @@ class VerificationController extends Controller
             // ■ 既に認証まで済ませたユーザー
             if (Auth::check()) {
                 // ■ ユーザーが既にログインしている場合
-                return redirect()->route('attendance')->with('info', 'メールアドレスは既に認証されています。');
+                return redirect()->route('attendance.index')->with('info', 'メールアドレスは既に認証されています。');
             } else {
                 // ■ ユーザーがログインしていない場合
                 Auth::login($user);
-                return redirect()->route('attendance')->with('info', 'メールアドレスは既に認証されています。ログインしました。');
+                return redirect()->route('attendance.index')->with('info', 'メールアドレスは既に認証されています。ログインしました。');
             }
         }
 

@@ -16,19 +16,35 @@
 <body>
     <header class="header">
         <div class="header_inner">
-            <!-- 管理者用ヘッダー -->
-            <a class="header__logo" href="/admin/attendance/list">
-                <img src="{{ asset('images/logo.svg') }}" alt="COACHTECH ロゴ" class="logo-image">
-            </a>
-            <nav class="header__nav">
-                <a class="header__link" href="/admin/attendance/list">勤怠一覧</a>
-                <a class="header__link" href="/admin/staff/list">スタッフ一覧</a>
-                <a class="header__link" href="/stamp_correction_request/list" role="button">申請一覧</a>
-                <form action="{{ route('admin.logout') }}" method="POST" class="header__logout-form">
-                    @csrf
-                    <button type="submit" class="header__logout-button">ログアウト</button>
-                </form>
-            </nav>
+            @if (Auth::user() && Auth::user()->is_admin)
+                <!-- 管理者用ヘッダー -->
+                <a class="header__logo" href="/admin/attendance/list">
+                    <img src="{{ asset('images/logo.svg') }}" alt="COACHTECH ロゴ" class="logo-image">
+                </a>
+                <nav class="header__nav">
+                    <a class="header__link" href="/admin/attendance/list">勤怠一覧</a>
+                    <a class="header__link" href="/admin/staff/list">スタッフ一覧</a>
+                    <a class="header__link" href="/stamp_correction_request/list" role="button">申請一覧</a>
+                    <form action="{{ route('admin.logout') }}" method="POST" class="header__logout-form">
+                        @csrf
+                        <button type="submit" class="header__logout-button">ログアウト</button>
+                    </form>
+                </nav>
+            @else
+                <!-- 一般ユーザー用ヘッダー -->
+                <a class="header__logo" href="/attendance">
+                    <img src="{{ asset('images/logo.svg') }}" alt="COACHTECH ロゴ" class="logo-image">
+                </a>
+                <nav class="header__nav">
+                    <a class="header__link" href="/attendance">勤怠</a>
+                    <a class="header__link" href="/attendance/list">勤怠一覧</a>
+                    <a class="header__link" href="/stamp_correction_request/list" role="button">申請一覧</a>
+                    <form action="{{ route('logout') }}" method="POST" class="header__logout-form">
+                        @csrf
+                        <button type="submit" class="header__logout-button">ログアウト</button>
+                    </form>
+                </nav>
+            @endif
         </div>
     </header>
 
@@ -96,7 +112,12 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5">休憩時間は登録されていません。</td> <!-- colspanを5に変更 -->
+                            <td class="col-1">休憩</td>
+                            <td class="col-2" colspan="2">
+                                <span style="font-weight: 400;">（休憩時間は登録されていません）</span>
+                            </td>
+                            <td class="col-4"></td>
+                            <td class="col-5"></td> <!-- 空白の列 -->
                         </tr>
                     @endforelse
                     <!-- 5行目 -->
@@ -114,11 +135,16 @@
                         <!-- 承認済みの場合 -->
                         <span class="btn-approved">承認済み</span>
                     @else
-                        <!-- 未承認の場合 -->
-                        <form action="{{ route('attendance_modification.approve_request', ['attendance_correct_request' => $modificationRequest->id]) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn-approve">承認</button>
-                        </form>
+                        @if (Auth::user()->is_admin)
+                            <!-- 管理者の場合 -->
+                            <form action="{{ route('attendance_modification.approve_request', ['attendance_correct_request' => $modificationRequest->id]) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn-approve">承認</button>
+                            </form>
+                        @else
+                            <!-- 一般ユーザーの場合 -->
+                            <p class="pending-message">※ 承認待ちのため修正はできません。</p>
+                        @endif
                     @endif
                 </div>
             </form>

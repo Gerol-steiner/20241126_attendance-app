@@ -100,13 +100,16 @@
                         <td>{{ $entry['totalTime'] ?? '' }}</td>
                         <!-- 詳細リンク -->
                         <td>
-                            @if ($entry['attendance'])
+                            @if ($entry['latestModification'] && is_null($entry['latestModification']->approved_by))
+                                <!-- 「承認待ち」の修正申請があれば表示させる -->
+                                <a href="{{ route('attendance_modification.approve', ['attendance_correct_request' => $entry['latestModification']->id]) }}">詳細</a>
+                            @elseif ($entry['attendance'])
+                                <!-- 「承認待ち」の修正申請がなければ通常の「勤怠詳細」 -->
                                 <a href="{{ route('attendance.detail', $entry['attendance']->id) }}">詳細</a>
                             @else
                                 -
                             @endif
                         </td>
-                    </tr>
                 @endforeach
             </tbody>
         </table>
