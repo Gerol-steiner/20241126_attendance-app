@@ -27,7 +27,7 @@ class AttendanceUpdateRequest extends FormRequest
             'check_in' => ['required', 'date_format:H:i'],
             'check_out' => ['required', 'date_format:H:i', 'after:check_in'],
             'breaktimes.*.start' => ['nullable', 'date_format:H:i'],
-            'breaktimes.*.end' => ['nullable', 'date_format:H:i', 'after:breaktimes.*.start'],
+            'breaktimes.*.end' => ['nullable', 'date_format:H:i', 'after_or_equal:breaktimes.*.start'],
             'remarks' => ['required', 'string', 'max:255'],
         ];
     }
@@ -45,7 +45,7 @@ class AttendanceUpdateRequest extends FormRequest
             'check_out.after' => '出勤時間もしくは退勤時間が不適切な値です',
             'breaktimes.*.start.date_format' => '休憩開始時間の形式が不正です',
             'breaktimes.*.end.date_format' => '休憩終了時間の形式が不正です',
-            'breaktimes.*.end.after' => '休憩時間が勤務時間外です',
+            'breaktimes.*.end.after_or_equal' => '休憩時間が不適切な値です',
             'remarks.required' => '備考を記入してください',
             'remarks.max' => '備考は255文字以内で入力してください',
         ];

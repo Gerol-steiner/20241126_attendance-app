@@ -42,4 +42,12 @@ class User extends Authenticatable implements MustVerifyEmail // （変更後：
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * ユーザーが持つ勤怠データ (1対多のリレーション)
+     */
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class, 'user_id');
+    }
 }

@@ -46,14 +46,8 @@ class AttendanceSeeder extends Seeder
                 Attendance::create([
                     'user_id' => $user->id, // ユーザーID
                     'date' => $dateRange->format('Y-m-d'), // 現在の日付
-                    // 出勤時間（07:50～08:10の範囲でランダム）
-                    'check_in' => Carbon::createFromTime(7, 50)
-                        ->addMinutes(rand(0, 20))
-                        ->format('H:i:s'),
-                    // 退勤時間（17:50～18:30の範囲でランダム）
-                    'check_out' => Carbon::createFromTime(17, 50)
-                        ->addMinutes(rand(0, 40))
-                        ->format('H:i:s'),
+                    'check_in' => '08:00:00', // 固定の出勤時間
+                    'check_out' => '18:00:00', // 固定の退勤時間
                 ]);
 
                 // 次の日に進む

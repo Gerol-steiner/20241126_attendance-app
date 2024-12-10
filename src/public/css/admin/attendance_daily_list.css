@@ -60,7 +60,7 @@ body {
 /* 一番外の div  */
 .attendance-wrapper {
     width: 65%;
-    margin: 0 auto;
+    margin: 50px auto;
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -35,5 +35,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AttendanceSeeder::class);
         $this->call(StatusSeeder::class);
         $this->call(BreakTimeSeeder::class);
+        $this->call(AttendanceModificationSeeder::class);
+        $this->call(BreakTimeModificationSeeder::class);
     }
 }

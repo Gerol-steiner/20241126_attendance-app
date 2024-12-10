@@ -102,11 +102,6 @@
             </tbody>
         </table>
 
-        <!-- CSV出力ボタン -->
-        <div class="csv-button-wrapper">
-            <button id="downloadCsv" class="csv-button">CSV出力</button>
-        </div>
-
     </div>
 
 
