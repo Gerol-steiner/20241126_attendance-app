@@ -63,6 +63,7 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 50px;
 }
 
 /* タイトル 「勤怠一覧」*/
@@ -183,6 +184,22 @@ main {
 /* 詳細リンクのホバー時 */
 .attendance-table tbody td a:hover {
     text-decoration: underline;
+}
+
+/* 「CSV出力ボタン」枠 */
+.csv-button-wrapper {
+    margin-left: auto;
+    margin-top: 30px;
+}
+
+/* 「CSV出力ボタン」 */
+.csv-button {
+    font-size: 16px;
+
+    background-color: #000000;
+    color: #ffffff;
+    padding: 9px 26px;
+    border-radius: 5px;
 }
 
 /* タブレット（768-850px）向けのスタイル */

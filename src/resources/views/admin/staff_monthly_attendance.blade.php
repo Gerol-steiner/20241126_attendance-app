@@ -54,7 +54,7 @@
                 </a>
             </div>
 
-            <table class="attendance-table">
+            <table class="attendance-table" id="attendanceTable">
                 <thead>
                     <tr>
                         <th>日付</th>
@@ -101,8 +101,46 @@
                 @endforeach
             </tbody>
             </table>
+
+            <!-- CSV出力ボタン -->
+            <div class="csv-button-wrapper">
+                <button id="downloadCsv" class="csv-button">ＣＳＶ出力</button>
+            </div>
+
         </div>
     </main>
+
+    <script>
+        document.getElementById('downloadCsv').addEventListener('click', function () {
+            const table = document.getElementById('attendanceTable');
+            let csvContent = "";
+
+            // テーブルヘッダーをCSVに追加
+            const headers = Array.from(table.querySelectorAll('thead tr th'))
+                .map(th => `"${th.textContent.trim()}"`)
+                .join(',');
+            csvContent += headers + '\n';
+
+            // テーブルデータをCSVに追加
+            const rows = Array.from(table.querySelectorAll('tbody tr'));
+            rows.forEach(row => {
+                const rowData = Array.from(row.querySelectorAll('td'))
+                    .map(td => `"${td.textContent.trim()}"`)
+                    .join(',');
+                csvContent += rowData + '\n';
+            });
+
+            // CSVデータをダウンロード
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute('download', 'attendance_list.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    </script>
+
 </body>
 
 </html>

@@ -8,10 +8,11 @@ use App\Models\AttendanceModification;
 use App\Models\BreakTimeModification;
 use Carbon\Carbon;
 use Auth;
+use App\Http\Requests\AttendanceUpdateRequest;
 
 class AttendanceModificationController extends Controller
 {
-    public function update(Request $request, $user_id)
+    public function update(AttendanceUpdateRequest $request, $user_id)
     {
         // ユーザーが入力した年と月日を取得
         $dateYear = $request->input('date_year');

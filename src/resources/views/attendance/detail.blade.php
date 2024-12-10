@@ -75,13 +75,13 @@
                         <td class="col-1">日付</td>
                         <td class="col-2">
                             <div class="year-input-container">
-                                <input type="number" id="date_year" name="date_year" value="{{ $attendance->date->format('Y') }}" readonly>
+                                <input type="number" id="date_year" name="date_year" value="{{ old('date_year', $attendance->date->format('Y')) }}" readonly>
                                 <span class="year-suffix">年</span>
                             </div>
                         </td>
                         <td class="col-3"></td> <!-- 空欄 -->
                         <td class="col-4">
-                            <input type="text" id="date_month_day" name="date_month_day" value="{{ $attendance->date->format('n月j日') }}">
+                            <input type="text" id="date_month_day" name="date_month_day" value="{{ old('date_month_day', $attendance->date->format('n月j日')) }}">
                         </td>
                         <td class="col-5"></td> <!-- 空白の列 -->
                     </tr>
@@ -89,13 +89,13 @@
                     <tr>
                         <td class="col-1">出勤・退勤</td>
                         <td class="col-2">
-                            <input type="time" id="check_in" name="check_in" value="{{ $attendance->check_in ?? '' }}" class="time-input">
+                            <input type="time" id="check_in" name="check_in" value="{{ old('check_in', $attendance->check_in ?? '') }}" class="time-input">
                         </td>
                         <td class="col-3">
                             <span class="separator">～</span>
                         </td>
                         <td class="col-4">
-                            <input type="time" id="check_out" name="check_out" value="{{ $attendance->check_out ?? '' }}" class="time-input">
+                            <input type="time" id="check_out" name="check_out" value="{{ old('check_out', $attendance->check_out ?? '') }}" class="time-input">
                         </td>
                         <td class="col-5"></td> <!-- 空白の列 -->
                     </tr>
@@ -104,13 +104,13 @@
                         <tr>
                             <td class="col-1">休憩{{ $index + 1 }}</td>
                             <td class="col-2">
-                                <input type="time" name="breaktimes[{{ $breaktime->id }}][start]" value="{{ $breaktime->break_start ?? '' }}" placeholder="休憩開始" class="time-input">
+                                <input type="time" name="breaktimes[{{ $breaktime->id }}][start]" value="{{ old("breaktimes.{$breaktime->id}.start", $breaktime->break_start ?? '') }}" placeholder="休憩開始" class="time-input">
                             </td>
                             <td class="col-3">
                                 <span class="separator">～</span>
                             </td>
                             <td class="col-4">
-                                <input type="time" name="breaktimes[{{ $breaktime->id }}][end]" value="{{ $breaktime->break_end }}" placeholder="休憩終了" class="time-input">
+                                <input type="time" name="breaktimes[{{ $breaktime->id }}][end]" value="{{ old("breaktimes.{$breaktime->id}.end", $breaktime->break_end ?? '') }}" placeholder="休憩終了" class="time-input">
                             </td>
                             <td class="col-5"></td> <!-- 空白の列 -->
                         </tr>
@@ -123,12 +123,21 @@
                     <tr>
                         <td class="col-1">備考</td>
                         <td colspan="3" class="col-2">
-                            <textarea id="remarks" name="remarks" placeholder="申請理由を記載してください"></textarea>
+                            <textarea id="remarks" name="remarks" placeholder="申請理由を記載してください">{{ old('remarks') }}</textarea>
                         </td>
                         <td class="col-5"></td> <!-- 空白の列 -->
                     </tr>
                 </table>
 
+@if ($errors->any())
+    <div class="error-messages">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
                 <div class="button-container">
                     <button type="submit" class="submit-button">修正</button>

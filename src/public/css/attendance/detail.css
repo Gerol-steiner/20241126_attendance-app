@@ -217,6 +217,14 @@ input[name="remarks"] {
 }
 
 
+.error-messages ul {
+    color: red;
+    font-size: 14px;
+    list-style: none;
+    padding-left: 10px;
+    margin: -10px;
+}
+
 /* タブレット（768-850px）向けのスタイル */
 @media screen and (max-width: 850px) {
     .header_inner {
@@ -228,8 +236,11 @@ input[name="remarks"] {
 
         /*ヘッダー右側のnavスペース*/
         .header__nav {
-            width: 400px;
-            font-size: 16px;
+            font-size: 15px;
+        }
+
+        .header__link {
+            width: 24%;
         }
 
         /*ログアウトbutton*/
