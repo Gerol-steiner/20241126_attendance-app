@@ -31,7 +31,7 @@ class AdminAuthController extends Controller
 
         // ユーザーが存在しない、または認証条件を満たさない場合
         if (!$user || !$user->email_verified_at || $user->is_admin !== 1 || !Hash::check($request->password, $user->password)) {
-            return back()->withErrors(['email' => 'ログイン情報が正しくありません。'])->withInput();
+            return back()->withErrors(['email' => 'ログイン情報が登録されていません。'])->withInput();
         }
 
         // ログイン処理

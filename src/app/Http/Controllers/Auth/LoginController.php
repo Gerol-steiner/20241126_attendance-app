@@ -20,14 +20,14 @@ class LoginController extends Controller
         // ユーザーが存在しない場合、または認証前にバリデーション
         if (!$user) {
             return back()->withErrors([
-                'email' => 'ログイン情報が登録されていません',
+                'email' => 'ログイン情報が登録されていません。',
             ])->withInput();
         }
 
         // 管理者が一般用のログイン画面にアクセスした場合
         if ($user->is_admin) {
             return back()->withErrors([
-                'email' => 'ログイン情報が登録されていません',
+                'email' => 'ログイン情報が登録されていません。',
             ])->withInput();
         }
 
@@ -46,7 +46,7 @@ class LoginController extends Controller
 
         // 認証に失敗した場合の処理
         return back()->withErrors([
-            'email' => 'ログイン情報が登録されていません',
+            'email' => 'ログイン情報が登録されていません。',
         ])->withInput();
     }
 }

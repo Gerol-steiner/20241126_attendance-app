@@ -33,8 +33,11 @@ class AttendanceController extends Controller
 
         // 勤怠レコードが存在する場合、勤務状態を取得
         if ($attendance) {
-            // 最新のステータス変更を取得
-            $lastStatusChange = $attendance->StatusChanges()->latest('changed_at')->first();
+            // 最新のステータス変更を取得（changed_at と id を基準にソート）
+            $lastStatusChange = $attendance->StatusChanges()
+                ->orderBy('changed_at', 'desc')
+                ->orderBy('id', 'desc')
+                ->first();
 
             if ($lastStatusChange) {
                 $currentStatus = $lastStatusChange->Status->name;
