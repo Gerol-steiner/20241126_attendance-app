@@ -1,7 +1,7 @@
 /node_modules
 /public/hot
 /public/storage
-/storage/*.key
+/storage/*.key*
 /vendor
 .env
 .env.backup
@@ -13,3 +13,67 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+
+# Laravelのセッションファイル
+/storage/framework/sessions/*
+
+# Laravelのキャッシュファイル
+/storage/framework/views/*
+
+# Laravelのログファイル
+/storage/logs/*.log
+
+# PHPUnitのカバレッジレポート
+coverage/
+
+# IDE関連の設定ファイル
+/.idea/
+/*.sublime-project
+/*.sublime-workspace
+
+# その他の環境設定ファイル
+.env.local
+.env.testing
+.env.production
+.env.*
+# 「.env.example」だけはgit pushに含める
+!.env.example
+
+# Docker関連のファイル
+docker-compose.local.yml
+
+# Laravelのテスト用ファイル
+/tests/Browser/.*.snapshot
+/tests/Feature/.*.snapshot
+/tests/Unit/.*.snapshot
+
+# Laravel Mixのバンドル出力
+/public/mix-manifest.json
+
+# ローカルのIDE設定ファイル
+/.vscode/*
+/.idea/*
+
+# 環境依存のファイル
+.env.*.local
+
+# Laravelのストレージキャッシュ
+/storage/framework/cache/data/*
+
+# Gitの設定ファイル（例: ローカルのGit設定）
+/.gitconfig
+
+# 生成されたファイル
+*.log
+*.cache
+*.tmp
+
+# その他の環境設定ファイル
+.DS_Store  # macOSのファイル
+Thumbs.db  # Windowsのファイル
+
+# MySQLのデータディレクトリ内のPEMファイル（証明書ファイル）を無視
+/docker/mysql/data/*.pem
+
+# データベース永続化ディレクトリを無視
+/docker/mysql/data/
