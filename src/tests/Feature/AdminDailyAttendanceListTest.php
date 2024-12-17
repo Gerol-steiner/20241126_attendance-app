@@ -51,26 +51,34 @@ class AdminDailyAttendanceListTest extends TestCase
         ];
 
         // ダミーデータの全てをユニークにする
+        $attendanceIds = []; // 生成された Attendance の ID を保存する配列
+
         foreach ($dates as $index => $date) {
-            Attendance::create([
+            // User One の Attendance データ作成
+            $attendance1 = Attendance::create([
                 'user_id' => $user1->id,
                 'date' => $date,
                 'check_in' => sprintf('09:%02d:00', $index * 10), // 09:00, 09:10, 09:20
                 'check_out' => sprintf('17:%02d:00', $index * 10), // 17:00, 17:10, 17:20
-            ])->breakTimes()->create([
+            ]);
+            $attendance1->breakTimes()->create([
                 'break_start' => sprintf('12:%02d:00', $index * 10), // 12:00, 12:10, 12:20
                 'break_end' => sprintf('12:%02d:00', $index * 10 + 30), // 12:30, 12:40, 12:50
             ]);
+            $attendanceIds['user1'][] = $attendance1->id;
 
-            Attendance::create([
+            // User Two の Attendance データ作成
+            $attendance2 = Attendance::create([
                 'user_id' => $user2->id,
                 'date' => $date,
                 'check_in' => sprintf('08:%02d:00', $index * 15), // 08:00, 08:15, 08:30
                 'check_out' => sprintf('16:%02d:00', $index * 15), // 16:00, 16:15, 16:30
-            ])->breakTimes()->create([
+            ]);
+            $attendance2->breakTimes()->create([
                 'break_start' => sprintf('13:%02d:00', $index * 15), // 13:00, 13:15, 13:30
                 'break_end' => sprintf('13:%02d:00', $index * 15 + 20), // 13:20, 13:35, 13:50
             ]);
+            $attendanceIds['user2'][] = $attendance2->id;
         }
 
         // 管理者用日次勤怠一覧画面の当日データを確認
@@ -82,14 +90,14 @@ class AdminDailyAttendanceListTest extends TestCase
         $response->assertSee('17:10');
         $response->assertSee('0:30'); // 休憩時間
         $response->assertSee('7:30'); // 合計時間
-        $response->assertSee('<a href="' . route('attendance.detail', 3) . '">詳細</a>', false);
+        $response->assertSee('<a href="' . route('attendance.detail', $attendanceIds['user1'][1]) . '">詳細</a>', false);
 
         $response->assertSee('User Two');
         $response->assertSee('08:15');
         $response->assertSee('16:15');
         $response->assertSee('0:20'); // 休憩時間
         $response->assertSee('7:40'); // 合計時間
-        $response->assertSee('<a href="' . route('attendance.detail', 4) . '">詳細</a>', false);
+        $response->assertSee('<a href="' . route('attendance.detail', $attendanceIds['user2'][1]) . '">詳細</a>', false);
 
         // 前日リンクの動作を確認
         $response = $this->get(route('admin.attendance.daily_list', ['date' => now()->subDay()->toDateString()]));
@@ -100,14 +108,14 @@ class AdminDailyAttendanceListTest extends TestCase
         $response->assertSee('17:00');
         $response->assertSee('0:30'); // 前日の休憩時間
         $response->assertSee('7:30'); // 前日の勤務合計時間
-        $response->assertSee('<a href="' . route('attendance.detail', 1) . '">詳細</a>', false);
+        $response->assertSee('<a href="' . route('attendance.detail', $attendanceIds['user1'][0]) . '">詳細</a>', false);
 
         $response->assertSee('User Two');
         $response->assertSee('08:00'); // 前日のデータ
         $response->assertSee('16:00');
         $response->assertSee('0:20'); // 前日の休憩時間
         $response->assertSee('7:40'); // 前日の勤務合計時間
-        $response->assertSee('<a href="' . route('attendance.detail', 2) . '">詳細</a>', false);
+        $response->assertSee('<a href="' . route('attendance.detail', $attendanceIds['user2'][0]) . '">詳細</a>', false);
 
         // 翌日リンクの動作を確認
         $response = $this->get(route('admin.attendance.daily_list', ['date' => now()->addDay()->toDateString()]));
@@ -118,14 +126,14 @@ class AdminDailyAttendanceListTest extends TestCase
         $response->assertSee('17:20');
         $response->assertSee('0:30'); // 翌日の休憩時間
         $response->assertSee('7:30'); // 翌日の勤務合計時間
-        $response->assertSee('<a href="' . route('attendance.detail', 5) . '">詳細</a>', false);
+        $response->assertSee('<a href="' . route('attendance.detail', $attendanceIds['user1'][2]) . '">詳細</a>', false);
 
         $response->assertSee('User Two');
         $response->assertSee('08:30'); // 翌日のデータ
         $response->assertSee('16:30');
         $response->assertSee('0:20'); // 翌日の休憩時間
         $response->assertSee('7:40'); // 翌日の勤務合計時間
-        $response->assertSee('<a href="' . route('attendance.detail', 6) . '">詳細</a>', false);
+        $response->assertSee('<a href="' . route('attendance.detail', $attendanceIds['user2'][2]) . '">詳細</a>', false);
 
 
         // 確認
