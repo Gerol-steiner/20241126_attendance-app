@@ -1,8 +1,8 @@
-# COACHTECH フリマアプリ
+# COACHTECH 勤怠管理アプリ
 
 ## 環境構築
 
-ここでは、COACHTECH フリマアプリをクローンし、ローカル環境で動作させるための手順を説明します。
+ここでは、COACHTECH 勤怠管理アプリをクローンし、ローカル環境で動作させるための手順を説明します。
 
 ---
 
@@ -83,7 +83,6 @@ GitHub のリポジトリからプロジェクトをローカル環境にコピ�
   MAIL_PASSWORD=（各自設定）
   MAIL_FROM_ADDRESS=（各自設定）
   ```
-- `STRIPE_`セクションに Stripe の公開キーと秘密キーを入力。
 
 4. 補足：php コンテナから退出したいときは、以下のコマンドで退出します。
    ```bash
@@ -133,37 +132,7 @@ GitHub のリポジトリからプロジェクトをローカル環境にコピ�
 - `.env`ファイルの`APP_KEY`が生成されていることを確認してください。
 - `APP_KEY`が生成されていないときは、`.env`ファイルを閉じた状態で手順「2.」を再度実行してください。
 
-### 6. ストレージ権限の付与
-
-#### 【目的】
-
-アプリケーションが`storage`ディレクトリにアクセスできるようにします。
-
-#### 【手順】
-
-■ Linux 環境の場合:
-
-1. PHP コンテナ内に入ります。
-
-   ```bash
-   docker-compose exec php bash
-
-   ```
-
-2. コンテナ内で以下のコマンドを実行します。
-   ```bash
-   chmod -R 775 storage
-   chown -R www-data:www-data storage
-   ```
-
-■ その他の環境（Windows、macOS）の場合:
-
-- ファイルシステムの GUI を使用するか、環境に応じた適切な方法で storage ディレクトリとその中のファイルに対して、Web サーバーが読み取り/書き込みできるように権限を設定してください。
-- 具体的な方法は OS やサーバー設定によって異なるため、必要に応じてシステム管理者に相談するか、お使いの環境のドキュメントを参照してください。
-
-※ 注意: 権限設定は適切なセキュリティを維持しつつ、アプリケーションが正常に動作するように行ってください。
-
-### 7. データベースの準備
+### 6. データベースの準備
 
 #### 【目的】
 
@@ -189,12 +158,51 @@ GitHub のリポジトリからプロジェクトをローカル環境にコピ�
    ```bash
    php artisan db:seed
    ```
+   <br>
 
-### ＜注意事項＞
+---
 
-1. 商品画像やプロフィール画像: 商品やプロフィール画像が正しい場所に配置されていない場合、アプリケーションが正常に動作しません。必ずダミーデータの画像を storage/app/public/uploads に移動してください。
-2. 権限の付与: 特に storage ディレクトリへの書き込み権限が不足している場合、エラーが発生します。権限設定を確実に行ってください。
-3. 環境依存: 上記の手順は Linux を想定しています。Windows や Mac の場合、コマンドが異なる場合がありますので適宜環境に合わせて調整してください。
+## 初期データについて
+
+シードデータを作成することで、以下の初期データが作成されます。
+
+### ■ ユーザーデータ
+
+- ユーザーデータは **`UserSeeder.php`** に記述されています。
+- 管理者ユーザーおよび一般ユーザーのサンプルデータは以下の通りです。
+
+| ID  | 名前      | メールアドレス | パスワード | メール認証日時       | 管理者権限           |
+| --- | --------- | -------------- | ---------- | -------------------- | -------------------- |
+| 1   | 佐藤 剛士 | satou@test     | password   | シードデータ作成時刻 | あり (`is_admin: 1`) |
+| 2   | 鈴木 弘子 | suzuki@test    | password   | シードデータ作成時刻 | あり (`is_admin: 1`) |
+| 3   | 山田 太郎 | yamada@test    | password   | シードデータ作成時刻 | なし (`is_admin: 0`) |
+| 4   | 西 伶奈   | nishi@test     | password   | シードデータ作成時刻 | なし (`is_admin: 0`) |
+| 5   | 増田 一世 | masuda@test    | password   | シードデータ作成時刻 | なし (`is_admin: 0`) |
+| 6   | 山本 敬吉 | yamamoto@test  | password   | シードデータ作成時刻 | なし (`is_admin: 0`) |
+| 7   | 秋田 朋美 | akita@test     | password   | シードデータ作成時刻 | なし (`is_admin: 0`) |
+| 8   | 中西 教夫 | nakanisi@test  | password   | シードデータ作成時刻 | なし (`is_admin: 0`) |
+
+---
+
+### ■ 勤怠データ
+
+- 勤怠データのダミーデータは **`AttendanceSeeder.php`** に記述されています。
+- 一般ユーザー 3 名に対し、以下の条件で勤怠レコードが生成されます。
+  - **データ期間**: シードデータ作成日の前日までの直近 50 日間
+  - **対象ユーザー数**: `AttendanceSeeder.php` 内の `$maxUsers` で調整可能
+
+---
+
+### ■ 勤怠修正データ
+
+- 勤怠修正レコードのダミーデータは **`AttendanceModificationSeeder.php`** に記述されています。
+- 勤怠レコードを持つ一般ユーザーに対し、以下の条件で作成されます。
+  - **データ内容**:
+    - 承認待ち: 2 件
+    - 承認済み: 2 件
+  - 合計: ユーザーごとに 4 件生成
+
+<br>
 
 ---
 
@@ -213,11 +221,11 @@ GitHub のリポジトリからプロジェクトをローカル環境にコピ�
 1. MySQL コンテナに入る  
    以下のコマンドで MySQL コンテナに接続します:
 
-```bash
-docker-compose exec mysql bash
-```
+   ```bash
+   docker-compose exec mysql bash
+   ```
 
-2. MySQL にログイン  
+2. MySQL にログイン
    コンテナ内で以下を実行して MySQL にログインします:
 
 ```bash
@@ -258,6 +266,66 @@ exit; -- コンテナから退出
 
 ---
 
+## テスト環境と実行手順
+
+テスト用のデータベースを準備し、プロジェクトのテストを適切に実行できる環境を整えます。
+
+### 1. テスト用データベースの作成
+
+#### 目的
+
+テスト用データベースを作成して、テスト実行時に使用できるようにする。
+
+#### 手順
+
+1. MySQL コンテナに入る  
+   以下のコマンドで MySQL コンテナに接続します:
+
+   ```bash
+   docker-compose exec mysql bash
+   ```
+
+2. MySQL にログイン  
+   コンテナ内で以下を実行して MySQL にログインします:
+
+   ```bash
+   mysql -u root -p
+   ```
+
+   ※ パスワードは `docker-compose.yml` で設定した `MYSQL_ROOT_PASSWORD` を入力してください（例: `root`）。
+
+3. テスト用データベースの作成  
+   以下のコマンドでデータベースを作成します:
+
+   ```bash
+   CREATE DATABASE test_database; -- テーブル名は変更しないでください
+   SHOW DATABASES; -- 作成したデータベースが表示されれば成功
+   ```
+
+4. 権限の付与
+
+   以下のコマンドを実行して、`laravel_user` に `test_database`テーブル へのアクセス権を付与します:
+
+   ```bash
+   GRANT ALL PRIVILEGES ON test_database.* TO 'laravel_user'@'%';
+   ```
+
+   権限変更を適用するために次のコマンドを実行します:
+
+   ```bash
+   FLUSH PRIVILEGES;
+   ```
+
+5. ログアウトおよびコンテナ退出  
+   以下を実行して MySQL からログアウトし、コンテナを退出します:
+
+   ```bash
+   exit; -- MySQLログアウト
+   exit; -- コンテナから退出
+   ```
+
+---
+
 ### 2. テスト用環境設定
 
 #### 目的
@@ -269,37 +337,37 @@ exit; -- コンテナから退出
 1. `.env.testing` を作成  
    PHP コンテナ内で以下を実行します:
 
-```bash
-cp .env .env.testing
-```
+   ```bash
+   cp .env .env.testing
+   ```
 
-3. `.env.testing` の設定  
+2. `.env.testing` の設定  
    必要に応じて以下を編集します:
 
-```bash
-APP_ENV=testing
-APP_KEY=  # 空のままにしてください
-DB_CONNECTION=mysql
-DB_HOST=mysql
-DB_PORT=3306
-DB_DATABASE=test_database  # 先ほど作成したデータベース名
-DB_USERNAME=laravel_user  # docker-compose.ymlで設定した値
-DB_PASSWORD=laravel_pass  # docker-compose.ymlで設定した値
-```
+   ```bash
+   APP_ENV=testing
+   APP_KEY=  # 空のままにしてください
+   DB_CONNECTION=mysql
+   DB_HOST=mysql
+   DB_PORT=3306
+   DB_DATABASE=test_database  # 先ほど作成したデータベース名
+   DB_USERNAME=laravel_user  # docker-compose.ymlで設定した値
+   DB_PASSWORD=laravel_pass  # docker-compose.ymlで設定した値
+   ```
 
-5. アプリケーションキーの生成  
+3. アプリケーションキーの生成  
    以下のコマンドを実行してテスト用環境のキーを生成します:
 
-```bash
-php artisan key:generate --env=testing
-```
+   ```bash
+   php artisan key:generate --env=testing
+   ```
 
-7. 設定キャッシュのクリア（必要に応じて）  
+4. 設定キャッシュのクリア（必要に応じて）  
    `.env.testing` の変更が反映されない場合に以下を実行してください:
 
-```bash
-php artisan config:clear
-```
+   ```bash
+   php artisan config:clear
+   ```
 
 ---
 
@@ -353,13 +421,6 @@ php artisan test
 
 - **`phpunit.xml` の設定について**  
   `phpunit.xml` はプロジェクトに既に含まれているため、基本的に編集は不要です。特殊な要件がある場合のみ修正してください。
-
-- **テストデータの準備**  
-  シードファイルを使用してテストデータを準備する場合、以下のコマンドを実行してください:
-
-```bash
-php artisan db:seed --env=testing
-```
 
 ---
 
