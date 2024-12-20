@@ -236,7 +236,7 @@ SHOW DATABASES; -- 作成したデータベースが表示されれば成功
 
 4. 権限の付与
 
-   以下のコマンドを実行して、`laravel_user` に `demo_test`テーブル へのアクセス権を付与します:
+   以下のコマンドを実行して、`laravel_user` に `test_database`テーブル へのアクセス権を付与します:
 
 ```bash
 GRANT ALL PRIVILEGES ON test_database.* TO 'laravel_user'@'%';
@@ -282,7 +282,7 @@ APP_KEY=  # 空のままにしてください
 DB_CONNECTION=mysql
 DB_HOST=mysql
 DB_PORT=3306
-DB_DATABASE=demo_test  # 先ほど作成したデータベース名
+DB_DATABASE=test_database  # 先ほど作成したデータベース名
 DB_USERNAME=laravel_user  # docker-compose.ymlで設定した値
 DB_PASSWORD=laravel_pass  # docker-compose.ymlで設定した値
 ```

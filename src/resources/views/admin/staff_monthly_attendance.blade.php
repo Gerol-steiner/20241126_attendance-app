@@ -28,14 +28,6 @@
         </div>
     </header>
 
-    <!--開発用-->
-    @if (Auth::check())
-        <p style="margin: 0;">ユーザーID: {{ Auth::user()->id }}</p>
-    @else
-        <p style="margin: 0;">ログインしていません。</p>
-    @endif
-
-
     <main>
         <div class="attendance-wrapper">
             <h1>{{ $user->name }}さんの月次勤怠一覧</h1>

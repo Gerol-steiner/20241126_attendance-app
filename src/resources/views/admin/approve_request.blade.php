@@ -50,10 +50,6 @@
 
 
     <main>
-<!--開発用-->
-<p style="margin: 0;">ユーザーID: {{ Auth::user()->id }}</p>
-<p style="margin: 0;">修正申請ID: {{ $modificationRequest->id }}</p>
-<p style="margin: 0;">承認者ID: {{ $modificationRequest->approved_by ?? 'null' }}</p>
 
         <div class="attendance-wrapper">
             <h1>勤怠詳細</h1>

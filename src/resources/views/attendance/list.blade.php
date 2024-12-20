@@ -30,16 +30,6 @@
     </header>
 
     <main>
-    <!--開発用-->
-    @if (Auth::check())
-        <p style="margin: 0;">ユーザーID: {{ Auth::user()->id }}</p>
-    @else
-        <p style="margin: 0;">ログインしていません。</p>
-    @endif
-
-
-
-
 
     <div class="attendance-wrapper">
         <h1>勤怠一覧</h1>

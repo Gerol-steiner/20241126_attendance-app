@@ -122,29 +122,6 @@
             @endif
 
 
-    <!--開発用-->
-    @if (Auth::check())
-        <p>ユーザーID: {{ Auth::user()->id }}</p>
-    @else
-        <p>ログインしていません。</p>
-    @endif
-
-    @if ($attendance)
-        <p>attendance_id: {{ $attendance->id }}</p>
-        <p>出勤時刻: {{ $attendance->check_in }}</p>
-        <p>退勤時刻: {{ $attendance->check_out }}</p>
-    @if ($attendance->breaktimes->isNotEmpty())
-        @foreach ($attendance->breaktimes as $index => $breaktime)
-            <p>休憩{{ $index + 1 }}開始: {{ $breaktime->break_start ?? '未記録' }}</p>
-            <p>休憩{{ $index + 1 }}終了: {{ $breaktime->break_end ?? '未記録' }}</p>
-        @endforeach
-    @else
-        <p>休憩データはありません。</p>
-    @endif
-        @else
-            <p>本日のattendanceレコードはまだありません</p>
-        @endif
-
     </main>
 
 </html>
