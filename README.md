@@ -225,66 +225,6 @@ GitHub のリポジトリからプロジェクトをローカル環境にコピ�
    docker-compose exec mysql bash
    ```
 
-2. MySQL にログイン
-   コンテナ内で以下を実行して MySQL にログインします:
-
-```bash
-mysql -u root -p
-```
-
-※ パスワードは `docker-compose.yml` で設定した `MYSQL_ROOT_PASSWORD` を入力してください（例: `root`）。
-
-3. テスト用データベースの作成  
-   以下のコマンドでデータベースを作成します:
-
-```bash
-CREATE DATABASE test_database; -- テーブル名は変更しないでください
-SHOW DATABASES; -- 作成したデータベースが表示されれば成功
-```
-
-4. 権限の付与
-
-   以下のコマンドを実行して、`laravel_user` に `test_database`テーブル へのアクセス権を付与します:
-
-```bash
-GRANT ALL PRIVILEGES ON test_database.* TO 'laravel_user'@'%';
-```
-
-権限変更を適用するために次のコマンドを実行します:
-
-```bash
-FLUSH PRIVILEGES;
-```
-
-5. ログアウトおよびコンテナ退出  
-   以下を実行して MySQL からログアウトし、コンテナを退出します:
-
-```bash
-exit; -- MySQLログアウト
-exit; -- コンテナから退出
-```
-
----
-
-## テスト環境と実行手順
-
-テスト用のデータベースを準備し、プロジェクトのテストを適切に実行できる環境を整えます。
-
-### 1. テスト用データベースの作成
-
-#### 目的
-
-テスト用データベースを作成して、テスト実行時に使用できるようにする。
-
-#### 手順
-
-1. MySQL コンテナに入る  
-   以下のコマンドで MySQL コンテナに接続します:
-
-   ```bash
-   docker-compose exec mysql bash
-   ```
-
 2. MySQL にログイン  
    コンテナ内で以下を実行して MySQL にログインします:
 
