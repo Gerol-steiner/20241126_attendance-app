@@ -442,6 +442,8 @@ php artisan test
 
 ### 認証関連
 
+- 一般ユーザー用ログイン画面: [http://localhost/login](http://localhost/login)
+- 管理者ユーザー用ログイン画面: [http://localhost/admin/login](http://localhost/admin/login)
 - ユーザー登録: [POST] [http://localhost/register](http://localhost/register)
 - メール認証待ち画面: [http://localhost/register/pending](http://localhost/register/pending)
 - メール認証: [GET] [http://localhost/email/verify/{id}/{hash}](http://localhost/email/verify/{id}/{hash})
