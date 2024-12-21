@@ -414,8 +414,6 @@ php artisan test
 
 ## アプリケーション URL 一覧
 
-## アプリケーション URL 一覧
-
 ### ユーザー向け主要画面
 
 - 勤怠画面: [http://localhost/attendance](http://localhost/attendance)
